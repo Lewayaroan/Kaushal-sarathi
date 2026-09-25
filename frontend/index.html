@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karigar Connect - AI-Driven Artisan Hub</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f7f6f2; /* Clay-white earthy background */
+        }
+        /* Custom earth palette classes */
+        .bg-terracotta { background-color: #c96f53; }
+        .text-terracotta { color: #c96f53; }
+        .hover-bg-terracotta:hover { background-color: #b05c42; }
+        .bg-forest { background-color: #2c4a3e; }
+        .text-forest { color: #2c4a3e; }
+        .border-forest { border-color: #2c4a3e; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col pb-20 md:pb-0">
+
+    <!-- Top Navigation Header -->
+    <header class="bg-forest text-white shadow-md px-6 py-4 flex justify-between items-center sticky top-0 z-50">
+        <div class="flex items-center gap-3">
+            <div class="h-10 w-10 rounded-full bg-white flex items-center justify-center text-forest font-bold text-xl shadow-inner">
+                <i class="fa-solid fa-drafting-compass"></i>
+            </div>
+            <div>
+                <h1 class="text-lg font-bold leading-tight">Karigar Connect</h1>
+                <p class="text-xs text-emerald-200">AI-Powered Market Linkage</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-4">
+            <div id="artisan-badge" class="hidden bg-terracotta text-xs px-3 py-1.5 rounded-full font-semibold flex items-center gap-2">
+                <i class="fa-solid fa-user-circle"></i> <span id="badge-artisan-name">Ramesh Prasad</span>
+            </div>
+            <button onclick="toggleAuthModal()" class="text-white hover:text-emerald-200 text-sm font-medium transition flex items-center gap-2">
+                <i class="fa-solid fa-sign-in-alt"></i> <span id="login-btn-text">Login/Register</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Container Layout -->
+    <div class="flex-grow flex flex-col md:flex-row max-w-7xl w-full mx-auto p-4 md:p-6 gap-6">
+        
+        <!-- Sidebar Navigation (Desktop) -->
+        <aside class="hidden md:flex flex-col w-64 bg-white rounded-2xl shadow-sm border border-stone-200 p-4 h-fit gap-2">
+            <button onclick="switchTab('dashboard')" class="tab-btn active-tab flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-forest hover:bg-stone-50 transition w-full text-left">
+                <i class="fa-solid fa-chart-line text-lg w-6"></i> Dashboard
+            </button>
+            <button onclick="switchTab('ai-studio')" class="tab-btn flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-stone-600 hover:bg-stone-50 transition w-full text-left">
+                <i class="fa-solid fa-wand-magic-sparkles text-lg w-6 text-terracotta"></i> AI Catalog Studio
+            </button>
+            <button onclick="switchTab('khata')" class="tab-btn flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-stone-600 hover:bg-stone-50 transition w-full text-left">
+                <i class="fa-solid fa-book text-lg w-6"></i> Offline Ledger (Khata)
+            </button>
+            <button onclick="switchTab('calculator')" class="tab-btn flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-stone-600 hover:bg-stone-50 transition w-full text-left">
+                <i class="fa-solid fa-calculator text-lg w-6"></i> Wage Calculator
+            </button>
+            <button onclick="switchTab('trends')" class="tab-btn flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-stone-600 hover:bg-stone-50 transition w-full text-left">
+                <i class="fa-solid fa-fire text-lg w-6"></i> Local Trend Alert
+            </button>
+            <button onclick="switchTab('logistics')" class="tab-btn flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-stone-600 hover:bg-stone-50 transition w-full text-left">
+                <i class="fa-solid fa-truck-ramp-box text-lg w-6"></i> Postal Pooling
+            </button>
+        </aside>
+
+        <!-- Content Area -->
+        <main class="flex-grow bg-white rounded-3xl shadow-sm border border-stone-200 p-6 min-h-[500px]">
+            
+            <!-- Welcome Alert if not logged in -->
+            <div id="welcome-alert" class="bg-amber-50 border border-amber-200 text-amber-900 rounded-2xl p-4 mb-6 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-info-circle text-amber-600 text-xl"></i>
+                    <div>
+                        <p class="font-medium text-sm">Demo Mode Active</p>
+                        <p class="text-xs text-amber-700">Please register or login to unlock personalized local state pricing, vernacular AI translation, and ONDC listing options.</p>
+                    </div>
+                </div>
+                <button onclick="seedDatabase()" class="bg-forest text-white text-xs px-3 py-1.5 rounded-lg hover:bg-emerald-950 font-semibold shadow-sm transition">
+                    <i class="fa-solid fa-database mr-1"></i> Seed Demo Data
+                </button>
+            </div>
+
+            <!-- Tab: Dashboard -->
+            <div id="tab-dashboard" class="tab-content flex flex-col gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Dashboard Cards -->
+                    <div class="bg-stone-50 border border-stone-200 p-5 rounded-2xl flex items-center justify-between">
+                        <div>
+                            <p class="text-stone-500 text-xs font-semibold uppercase tracking-wider">Total Sales (ONDC)</p>
+                            <h3 id="stat-sales" class="text-2xl font-bold text-stone-800 mt-1">₹0.00</h3>
+                        </div>
+                        <div class="h-12 w-12 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-wallet"></i>
+                        </div>
+                    </div>
+                    <div class="bg-stone-50 border border-stone-200 p-5 rounded-2xl flex items-center justify-between">
+                        <div>
+                            <p class="text-stone-500 text-xs font-semibold uppercase tracking-wider">Active Listings</p>
+                            <h3 id="stat-listings" class="text-2xl font-bold text-stone-800 mt-1">0</h3>
+                        </div>
+                        <div class="h-12 w-12 rounded-xl bg-terracotta/10 text-terracotta flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-box-open"></i>
+                        </div>
+                    </div>
+                    <div class="bg-stone-50 border border-stone-200 p-5 rounded-2xl flex items-center justify-between">
+                        <div>
+                            <p class="text-stone-500 text-xs font-semibold uppercase tracking-wider">Khata Net Profit</p>
+                            <h3 id="stat-profit" class="text-2xl font-bold text-stone-800 mt-1">₹0.00</h3>
+                        </div>
+                        <div class="h-12 w-12 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Showcase -->
+                <div>
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-bold text-stone-800 flex items-center gap-2">
+                            <i class="fa-solid fa-boxes-stacked text-forest"></i> Your E-Commerce Catalog
+                        </h2>
+                        <div class="flex items-center gap-2">
+                            <button onclick="resetDemoData()" title="Reset catalog to demo state with Draft products" class="bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs px-3 py-2 rounded-xl font-bold flex items-center gap-1.5 transition">
+                                <i class="fa-solid fa-arrows-rotate"></i> Reset Drafts (List ONDC)
+                            </button>
+                            <button onclick="switchTab('ai-studio')" class="bg-terracotta text-white text-xs px-3 py-2 rounded-xl hover-bg-terracotta font-bold flex items-center gap-1.5 shadow-sm transition">
+                                <i class="fa-solid fa-plus"></i> Add Item with AI Studio
+                            </button>
+                        </div>
+                    </div>
+                    <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Products will be dynamically populated -->
+                        <div class="col-span-full py-12 text-center text-stone-400">
+                            <i class="fa-solid fa-box-open text-4xl mb-2 block"></i>
+                            No products cataloged yet. Tap "Add Item with AI Studio" to begin!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: AI Studio -->
+            <div id="tab-ai-studio" class="tab-content hidden flex flex-col gap-6">
+                <div class="border-b border-stone-200 pb-3 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-xl font-bold text-stone-800 flex items-center gap-2">
+                            <i class="fa-solid fa-wand-magic-sparkles text-terracotta"></i> AI Cataloging Studio
+                        </h2>
+                        <p class="text-stone-500 text-xs mt-1">Harness advanced speech-to-text translation and AI image segmenting.</p>
+                    </div>
+                </div>
+
+                <!-- Flow Container -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    
+                    <!-- Left: Inputs -->
+                    <div class="flex flex-col gap-6">
+                        <!-- Step 1: Voice Input -->
+                        <div class="bg-stone-50 border border-stone-200 p-5 rounded-2xl">
+                            <h3 class="font-bold text-stone-800 flex items-center gap-2 mb-3">
+                                <span class="h-6 w-6 rounded-full bg-forest text-white text-xs flex items-center justify-center font-bold">1</span>
+                                Voice-First Product Description
+                            </h3>
+                            
+                            <!-- Test audio inputs for easy demo -->
+                            <div class="mb-4">
+                                <label class="block text-xs font-semibold text-stone-500 mb-1.5">Select Language & Demo Prompt</label>
+                                <div class="grid grid-cols-2 gap-2 mb-3">
+                                    <button onclick="selectDemoPrompt('hindi', 'मैंने अपने हाथों से मिट्टी का मटका बनाया है, प्राकृतिक लाल मिट्टी का उपयोग किया है।')" class="demo-prompt-btn border border-stone-200 rounded-lg p-2 text-left text-xs bg-white hover:bg-stone-100 transition active:border-forest">
+                                        <span class="font-semibold text-stone-700 block">Hindi (Water Pot)</span>
+                                        <span class="text-stone-400 truncate block">मैंने अपने हाथों से मिट्टी का मटका...</span>
+                                    </button>
+                                    <button onclick="selectDemoPrompt('tamil', 'கைவினை செம்பு பாத்திரம் தண்ணீர் சேமிக்க சிறந்தது.')" class="demo-prompt-btn border border-stone-200 rounded-lg p-2 text-left text-xs bg-white hover:bg-stone-100 transition active:border-forest">
+                                        <span class="font-semibold text-stone-700 block">Tamil (Copper Vessel)</span>
+                                        <span class="text-stone-400 truncate block">கைவினை செம்பு பாத்திரம் தண்ணீர்...</span>
+                                    </button>
+                                </div>
+                                <div class="relative">
+                                    <textarea id="voice-text-fallback" rows="3" class="w-full text-sm border border-stone-200 rounded-xl p-3 bg-white focus:outline-none focus:border-forest" placeholder="Enter vernacular text or tap mic to transcribe..."></textarea>
+                                    <button onclick="toggleMicrophone()" id="mic-btn" class="absolute right-3 bottom-3 h-10 w-10 rounded-full bg-terracotta text-white flex items-center justify-center hover-bg-terracotta active:scale-95 shadow transition">
+                                        <i class="fa-solid fa-microphone"></i>
+                                    </button>
+                                </div>
+                                <p id="mic-status" class="text-stone-400 text-[10px] mt-1.5 italic">Tap microphone to trigger Whisper Voice Transcription Simulation.</p>
+                            </div>
+                            
+                            <button onclick="processVoiceListing()" id="voice-btn" class="w-full bg-forest text-white py-2.5 rounded-xl hover:bg-emerald-900 font-semibold text-sm shadow-sm transition">
+                                <i class="fa-solid fa-gears mr-1"></i> Generate AI Product Details
+                            </button>
+                        </div>
+
+                        <!-- Step 2: Photography Background Replacement -->
+                        <div class="bg-stone-50 border border-stone-200 p-5 rounded-2xl">
+                            <h3 class="font-bold text-stone-800 flex items-center gap-2 mb-3">
+                                <span class="h-6 w-6 rounded-full bg-forest text-white text-xs flex items-center justify-center font-bold">2</span>
+                                AI Image Enhancer
+                            </h3>
+                            <div class="mb-4">
+                                <label class="block text-xs font-semibold text-stone-500 mb-1.5">Product Photo Source</label>
+                                <div class="grid grid-cols-2 gap-3 mb-4">
+                                    <div class="border-2 border-dashed border-stone-300 rounded-xl p-4 flex flex-col items-center justify-center bg-white cursor-pointer hover:bg-stone-100 transition relative">
+                                        <input type="file" id="image-upload" class="absolute inset-0 opacity-0 cursor-pointer" onchange="previewUpload(event)">
+                                        <i class="fa-solid fa-camera text-2xl text-stone-400 mb-1"></i>
+                                        <span class="text-[10px] font-semibold text-stone-500">Camera Upload</span>
+                                    </div>
+                                    <div class="border border-stone-200 rounded-xl overflow-hidden relative group">
+                                        <img id="upload-preview" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Potter_at_work%2C_Jaura%2C_India.jpg/800px-Potter_at_work%2C_Jaura%2C_India.jpg" class="w-full h-20 object-cover opacity-80 group-hover:scale-105 transition" alt="Product thumbnail">
+                                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+                                            <span class="text-[10px] font-bold text-white uppercase tracking-wider">Workshop Demo</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="block text-xs font-semibold text-stone-500 mb-1.5">Choose Professional Background Theme</label>
+                                    <select id="bg-theme" class="w-full text-sm border border-stone-200 rounded-xl p-2.5 bg-white focus:outline-none focus:border-forest">
+                                        <option value="studio">Clean White Studio Backdrop (Jaipur Pottery)</option>
+                                        <option value="wooden_table">Rustic Teak Wood Table (Terracotta Matka)</option>
+                                        <option value="festival_lights">Festive Bokeh Lights (Brassware)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <button onclick="enhanceProductImage()" id="enhance-btn" class="w-full bg-terracotta text-white py-2.5 rounded-xl hover-bg-terracotta font-semibold text-sm shadow-sm transition">
+                                <i class="fa-solid fa-sparkles mr-1"></i> Replace Background (Generative AI)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right: AI Results & Final Review -->
+                    <div class="bg-stone-50 border border-stone-200 p-6 rounded-2xl flex flex-col gap-4">
+                        <div class="flex justify-between items-center border-b border-stone-200 pb-2">
+                            <h3 class="font-bold text-stone-800 text-sm uppercase tracking-wider">AI Generated Catalog Sheet</h3>
+                            <span class="bg-orange-100 text-orange-800 text-[10px] px-2 py-0.5 rounded font-bold uppercase">Staging</span>
+                        </div>
+                        
+                        <div class="flex flex-col gap-3 flex-grow">
+                            <!-- Image Comparison -->
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <span class="text-[10px] font-semibold text-stone-400 uppercase tracking-wider block mb-1">Before (Cluttered Workshop)</span>
+                                    <div class="h-32 rounded-xl overflow-hidden bg-white border border-stone-200">
+                                        <img id="ai-original-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Potter_at_work%2C_Jaura%2C_India.jpg/800px-Potter_at_work%2C_Jaura%2C_India.jpg" class="w-full h-full object-cover" alt="Cluttered workshop background">
+                                    </div>
+                                </div>
+                                <div>
+                                    <span class="text-[10px] font-semibold text-stone-400 uppercase tracking-wider block mb-1">After (AI Enhanced Studio)</span>
+                                    <div class="h-32 rounded-xl overflow-hidden bg-white border border-stone-200 relative">
+                                        <img id="ai-enhanced-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Blue_pottery_from_Jaipur_2.jpg/800px-Blue_pottery_from_Jaipur_2.jpg" class="w-full h-full object-cover blur-[1px]" alt="Enhanced studio background">
+                                        <div id="image-processing-loader" class="hidden absolute inset-0 bg-forest/80 flex items-center justify-center text-white text-xs font-bold gap-2">
+                                            <i class="fa-solid fa-spinner animate-spin"></i> Processing...
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Input form prefilled by AI -->
+                            <div class="flex flex-col gap-3">
+                                <div>
+                                    <label class="block text-xs font-semibold text-stone-500 mb-1">Product Title</label>
+                                    <input type="text" id="ai-title" class="w-full text-sm border border-stone-200 rounded-xl p-2.5 bg-white focus:outline-none focus:border-forest" value="Handcrafted Jaipur Ceramic Pot">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-stone-500 mb-1">Product Description</label>
+                                    <textarea id="ai-desc" rows="3" class="w-full text-sm border border-stone-200 rounded-xl p-2.5 bg-white focus:outline-none focus:border-forest">Beautiful blue pottery ceramic pot painted by hand. Direct from Jaipur craftsmen. Eco-friendly organic paint.</textarea>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="block text-xs font-semibold text-stone-500 mb-1">Category</label>
+                                        <input type="text" id="ai-category" class="w-full text-sm border border-stone-200 rounded-xl p-2.5 bg-white focus:outline-none focus:border-forest" value="Handcrafted Pottery & Earthenware">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-stone-500 mb-1">HSN / Tax Code</label>
+                                        <input type="text" id="ai-hsn" class="w-full text-sm border border-stone-200 rounded-xl p-2.5 bg-white focus:outline-none focus:border-forest" value="69120010">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-stone-500 mb-1">Selling Price (₹)</label>
+                                    <input type="number" id="ai-price" class="w-full text-sm border border-stone-200 rounded-xl p-2.5 bg-white focus:outline-none focus:border-forest" value="350">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button onclick="saveProductCatalog()" class="w-full bg-forest text-white py-3 rounded-xl hover:bg-emerald-900 font-bold text-sm shadow-sm transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> Save & Catalog Product
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Tab: Offline Ledger (Khata) -->
+            <div id="tab-khata" class="tab-content hidden flex flex-col gap-6">
+                <div class="border-b border-stone-200 pb-3 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-xl font-bold text-stone-800 flex items-center gap-2">
+                            <i class="fa-solid fa-book text-stone-600"></i> Offline Ledger (Vikas Khata)
+                        </h2>
+                        <p class="text-stone-500 text-xs mt-1">Record sales and expenses offline. Sync to cloud when internet is active.</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="readLedgerAloud()" class="bg-stone-100 hover:bg-stone-200 text-stone-700 px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition">
+                            <i class="fa-solid fa-volume-up text-terracotta"></i> Listen Balance (Audio)
+                        </button>
+                        <button onclick="syncKhataTransactions()" class="bg-forest text-white px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow transition">
+                            <i class="fa-solid fa-rotate"></i> Sync Cloud
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Ledger Overview -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Left Form -->
+                    <div class="bg-stone-50 border border-stone-200 p-5 rounded-2xl h-fit">
+                        <h3 class="font-bold text-stone-800 text-sm mb-4">Add Transaction</h3>
+                        <div class="flex flex-col gap-3 mb-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-stone-500 mb-1">Transaction Type</label>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <button id="tx-type-sale" onclick="selectTxType('SALE')" class="py-2 rounded-lg border border-emerald-500 bg-emerald-50 text-emerald-800 font-bold text-xs text-center transition">
+                                        <i class="fa-solid fa-arrow-down mr-1"></i> Sale / Income
+                                    </button>
+                                    <button id="tx-type-expense" onclick="selectTxType('EXPENSE')" class="py-2 rounded-lg border border-stone-200 bg-white text-stone-600 font-medium text-xs text-center transition">
+                                        <i class="fa-solid fa-arrow-up mr-1"></i> Expense
+                                    </button>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-stone-500 mb-1">Amount (₹)</label>
+                                <input type="number" id="khata-amount" class="w-full text-sm border border-stone-200 rounded-xl p-2.5 bg-white focus:outline-none focus:border-forest" placeholder="e.g. ₹500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-stone-500 mb-1">Details</label>
+                                <input type="text" id="khata-details" class="w-full text-sm border border-stone-200 rounded-xl p-2.5 bg-white focus:outline-none focus:border-forest" placeholder="e.g. Sold pottery locally">
+                            </div>
+                        </div>
+                        <button onclick="addKhataTransaction()" class="w-full bg-forest text-white py-2.5 rounded-xl hover:bg-emerald-900 font-semibold text-sm shadow-sm transition">
+                            <i class="fa-solid fa-save mr-1"></i> Save Transaction
+                        </button>
+                    </div>
+
+                    <!-- Right Ledger List -->
+                    <div class="lg:col-span-2 border border-stone-200 rounded-2xl overflow-hidden flex flex-col">
+                        <div class="bg-stone-50 px-4 py-3 border-b border-stone-200 flex justify-between items-center">
+                            <span class="text-xs font-bold text-stone-500 uppercase tracking-wider">Transaction Records</span>
+                            <span id="khata-status-badge" class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded font-semibold flex items-center gap-1">
+                                <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span> Connected
+                            </span>
+                        </div>
+                        <div class="flex-grow max-h-[300px] overflow-y-auto divide-y divide-stone-100" id="khata-list">
+                            <!-- Transactions dynamic -->
+                            <div class="py-12 text-center text-stone-400">
+                                <i class="fa-solid fa-receipt text-3xl mb-2 block"></i> No records found.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Calculator -->
+            <div id="tab-calculator" class="tab-content hidden flex flex-col gap-6">
+                <div class="border-b border-stone-200 pb-3">
+                    <h2 class="text-xl font-bold text-stone-800 flex items-center gap-2">
+                        <i class="fa-solid fa-calculator text-stone-600"></i> Fair-Wage & Product Pricing Tool
+                    </h2>
+                    <p class="text-stone-500 text-xs mt-1">Compute selling price based on state-mandated minimum daily wages.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Left: Form -->
+                    <div class="bg-stone-50 border border-stone-200 p-5 rounded-2xl flex flex-col gap-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-stone-500 mb-1">State of Residence</label>
+                                <select id="calc-state" class="w-full text-sm border border-stone-200 rounded-xl p-2.5 bg-white focus:outline-none focus:border-forest">
+                                    <option value="rajasthan">Rajasthan</option>
+                                    <option value="bihar">Bihar</option>
+                                    <option value="assam">Assam</option>
+                                    <option value="maharashtra">Maharashtra</option>
+                                    <option value="tamil nadu">Tamil Nadu</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-stone-500 mb-1">Desired Daily Wage (₹)</label>
+                                <input type="number" id="calc-desired-wage" class="w-full text-sm border border-stone-200 rounded-xl p-2.5 bg-white focus:outline-none focus:border-forest" value="480">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-stone-500 mb-1">Material Raw Cost (₹)</label>
+                            <input type="number" id="calc-materials" class="w-full text-sm border border-stone-200 rounded-xl p-2.5 bg-white focus:outline-none focus:border-forest" value="80">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-stone-500 mb-1">Labor Hours Spent</label>
+                                <input type="number" id="calc-hours" class="w-full text-sm border border-stone-200 rounded-xl p-2.5 bg-white focus:outline-none focus:border-forest" value="5">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-stone-500 mb-1">Other Overheads (₹)</label>
+                                <input type="number" id="calc-overheads" class="w-full text-sm border border-stone-200 rounded-xl p-2.5 bg-white focus:outline-none focus:border-forest" value="20">
+                            </div>
+                        </div>
+                        <button onclick="calculatePrice()" class="w-full bg-forest text-white py-2.5 rounded-xl hover:bg-emerald-900 font-semibold text-sm shadow-sm transition">
+                            <i class="fa-solid fa-calculator-alt mr-1"></i> Calculate Pricing Model
+                        </button>
+                    </div>
+
+                    <!-- Right: Results Card -->
+                    <div id="calc-results-card" class="hidden bg-stone-50 border border-stone-200 p-6 rounded-2xl flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center border-b border-stone-200 pb-2 mb-4">
+                                <h3 class="font-bold text-stone-800 text-sm uppercase tracking-wider">Suggested Pricing Blueprint</h3>
+                                <span id="calc-wage-compliance" class="bg-emerald-100 text-emerald-800 text-[10px] px-2.5 py-0.5 rounded-full font-bold">COMPLIANT</span>
+                            </div>
+                            
+                            <div class="flex flex-col gap-3 text-sm">
+                                <div class="flex justify-between text-stone-600">
+                                    <span>Material Cost</span>
+                                    <span id="res-material" class="font-semibold text-stone-800">₹0.00</span>
+                                </div>
+                                <div class="flex justify-between text-stone-600">
+                                    <span>Labor Cost (<span id="res-hours">0</span>h worked)</span>
+                                    <span id="res-labor" class="font-semibold text-stone-800">₹0.00</span>
+                                </div>
+                                <div class="flex justify-between text-stone-600">
+                                    <span>State Minimum Hourly Rate</span>
+                                    <span id="res-min-rate" class="text-stone-500 text-xs">₹0.00/h</span>
+                                </div>
+                                <div class="flex justify-between text-stone-600 border-b border-stone-200 pb-2">
+                                    <span>Overhead & Fuel</span>
+                                    <span id="res-overheads" class="font-semibold text-stone-800">₹0.00</span>
+                                </div>
+                                <div class="flex justify-between font-bold text-stone-800 text-base pt-1">
+                                    <span>Total Cost of Production</span>
+                                    <span id="res-production">₹0.00</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Outputs -->
+                        <div class="mt-6 flex flex-col gap-3">
+                            <div class="bg-white p-4 border border-stone-200 rounded-xl shadow-inner flex justify-between items-center">
+                                <div>
+                                    <span class="text-xs font-semibold text-stone-400 block">Suggested ONDC Price (1.2x)</span>
+                                    <span class="text-xs text-stone-500">For retail consumer apps</span>
+                                </div>
+                                <span id="res-retail" class="text-xl font-extrabold text-emerald-800">₹0.00</span>
+                            </div>
+                            
+                            <div class="bg-white p-4 border border-stone-200 rounded-xl shadow-inner flex justify-between items-center">
+                                <div>
+                                    <span class="text-xs font-semibold text-stone-400 block">Suggested B2B Price (1.1x)</span>
+                                    <span class="text-xs text-stone-500">For bulk procurement</span>
+                                </div>
+                                <span id="res-wholesale" class="text-lg font-bold text-stone-700">₹0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Trend Alert -->
+            <div id="tab-trends" class="tab-content hidden flex flex-col gap-6">
+                <div class="border-b border-stone-200 pb-3 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-xl font-bold text-stone-800 flex items-center gap-2">
+                            <i class="fa-solid fa-fire text-terracotta"></i> Real-Time Local Trend Alert
+                        </h2>
+                        <p class="text-stone-500 text-xs mt-1">Find what products are in high demand in urban centers to optimize production.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6" id="trends-grid">
+                    <!-- Dynamic Trends cards -->
+                    <div class="col-span-full py-12 text-center text-stone-400">
+                        <i class="fa-solid fa-bell text-3xl mb-2 block"></i> Select an artisan profile to load localized trends.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Postal Pooling -->
+            <div id="tab-logistics" class="tab-content hidden flex flex-col gap-6">
+                <div class="border-b border-stone-200 pb-3">
+                    <h2 class="text-xl font-bold text-stone-800 flex items-center gap-2">
+                        <i class="fa-solid fa-truck-ramp-box text-forest"></i> Collaborative Postal Pooling Tracker
+                    </h2>
+                    <p class="text-stone-500 text-xs mt-1">Aggregate shipments with neighbors to get bulk delivery discounts with India Post.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6" id="logistics-grid">
+                    <!-- Dynamic Logistics pools -->
+                    <div class="col-span-full py-12 text-center text-stone-400">
+                        <i class="fa-solid fa-truck-monster text-3xl mb-2 block"></i> Loading active regional pools...
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Bottom Nav Bar (Mobile viewport only) -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-stone-200 flex justify-around py-2 shadow-lg z-50">
+        <button onclick="switchTab('dashboard')" class="mobile-tab-btn flex flex-col items-center gap-0.5 text-forest">
+            <i class="fa-solid fa-chart-line text-lg"></i>
+            <span class="text-[10px] font-medium">Home</span>
+        </button>
+        <button onclick="switchTab('ai-studio')" class="mobile-tab-btn flex flex-col items-center gap-0.5 text-stone-400">
+            <i class="fa-solid fa-wand-magic-sparkles text-lg text-terracotta"></i>
+            <span class="text-[10px] font-medium">Studio</span>
+        </button>
+        <button onclick="switchTab('khata')" class="mobile-tab-btn flex flex-col items-center gap-0.5 text-stone-400">
+            <i class="fa-solid fa-book text-lg"></i>
+            <span class="text-[10px] font-medium">Khata</span>
+        </button>
+        <button onclick="switchTab('calculator')" class="mobile-tab-btn flex flex-col items-center gap-0.5 text-stone-400">
+            <i class="fa-solid fa-calculator text-lg"></i>
+            <span class="text-[10px] font-medium">Pricing</span>
+        </button>
+        <button onclick="switchTab('trends')" class="mobile-tab-btn flex flex-col items-center gap-0.5 text-stone-400">
+            <i class="fa-solid fa-fire text-lg"></i>
+            <span class="text-[10px] font-medium">Trends</span>
+        </button>
+    </nav>
+
+    <!-- Auth / Registration Modal -->
+    <div id="auth-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl p-6 max-w-sm w-full border border-stone-200 flex flex-col gap-4 shadow-xl">
+            <div class="flex justify-between items-center">
+                <h3 class="font-bold text-stone-800 text-base">Artisan Registration</h3>
+                <button onclick="toggleAuthModal()" class="text-stone-400 hover:text-stone-600 text-lg"><i class="fa-solid fa-times"></i></button>
+            </div>
+            
+            <div class="flex flex-col gap-3 text-sm">
+                <div>
+                    <label class="block text-xs font-semibold text-stone-500 mb-1">Full Name</label>
+                    <input type="text" id="auth-name" class="w-full border border-stone-200 rounded-xl p-2.5 focus:outline-none focus:border-forest" value="Ramesh Prasad">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-stone-500 mb-1">Contact Phone Number</label>
+                    <input type="text" id="auth-phone" class="w-full border border-stone-200 rounded-xl p-2.5 focus:outline-none focus:border-forest" value="9876543210">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-stone-500 mb-1">State</label>
+                        <select id="auth-state" class="w-full border border-stone-200 rounded-xl p-2.5 focus:outline-none focus:border-forest">
+                            <option value="Rajasthan">Rajasthan</option>
+                            <option value="Bihar">Bihar</option>
+                            <option value="Assam">Assam</option>
+                            <option value="Maharashtra">Maharashtra</option>
+                            <option value="Tamil Nadu">Tamil Nadu</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-stone-500 mb-1">Pincode</label>
+                        <input type="text" id="auth-pincode" class="w-full border border-stone-200 rounded-xl p-2.5 focus:outline-none focus:border-forest" value="302001">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-stone-500 mb-1">Primary Dialect/Language</label>
+                    <select id="auth-lang" class="w-full border border-stone-200 rounded-xl p-2.5 focus:outline-none focus:border-forest">
+                        <option value="Hindi">Hindi (हिंदी)</option>
+                        <option value="Tamil">Tamil (தமிழ்)</option>
+                        <option value="Bengali">Bengali (বাংলা)</option>
+                        <option value="English">English</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button onclick="registerArtisan()" class="w-full bg-forest text-white py-3 rounded-xl hover:bg-emerald-950 font-bold text-sm shadow-sm transition">
+                Register & Initialize Hub
+            </button>
+        </div>
+    </div>
+
+    <!-- Script Utilities -->
+    <script>
+        const API_BASE = "http://localhost:8000/api";
+        let activeArtisan = null;
+        let activeTab = "dashboard";
+        let dbTransactions = []; // Holds transaction records
+        
+        // Tab switching controller
+        function switchTab(tabId) {
+            activeTab = tabId;
+            // Hide all contents
+            document.querySelectorAll(".tab-content").forEach(el => el.classList.add("hidden"));
+            // Show target
+            document.getElementById(`tab-${tabId}`).classList.remove("hidden");
+            
+            // Adjust Sidebar buttons (Desktop)
+            document.querySelectorAll(".tab-btn").forEach(btn => {
+                btn.classList.remove("bg-stone-100", "font-bold");
+                if (btn.innerText.toLowerCase().includes(tabId.replace("-", " "))) {
+                    btn.classList.add("bg-stone-100", "font-bold");
+                }
+            });
+
+            // Adjust Mobile Nav buttons
+            document.querySelectorAll(".mobile-tab-btn").forEach(btn => {
+                btn.classList.remove("text-forest");
+                btn.classList.add("text-stone-400");
+                if (btn.querySelector("span").innerText.toLowerCase().includes(tabId === "ai-studio" ? "studio" : tabId === "calculator" ? "pricing" : tabId === "dashboard" ? "home" : tabId)) {
+                    btn.classList.remove("text-stone-400");
+                    btn.classList.add("text-forest");
+                }
+            });
+
+            // Load tab dynamic details
+            if (tabId === "trends" && activeArtisan) {
+                loadTrends();
+            } else if (tabId === "logistics") {
+                loadLogisticsPools();
+            }
+        }
+
+        function toggleAuthModal() {
+            const modal = document.getElementById("auth-modal");
+            modal.classList.toggle("hidden");
+        }
+
+        // 1. Seed Demo Database
+        async function seedDatabase() {
+            try {
+                const response = await fetch(`${API_BASE}/system/seed?force=true`, { method: "POST" });
+                const result = await response.json();
+                alert(result.message || "Seeding complete!");
+                
+                // Auto-login seeded user
+                await loginArtisanDirect("9876543210");
+            } catch (err) {
+                console.error("Seeding failed", err);
+                alert("Please make sure the backend server is running on localhost:8000!");
+            }
+        }
+
+        async function resetDemoData() {
+            try {
+                const response = await fetch(`${API_BASE}/system/seed?force=true`, { method: "POST" });
+                const result = await response.json();
+                if (!activeArtisan) {
+                    await loginArtisanDirect("9876543210");
+                } else {
+                    await loadCatalog();
+                    await loadLedgerSummary();
+                    await loadLedgerList();
+                }
+                alert("Demo data reloaded! Products are reset with 'List ONDC' draft buttons.");
+            } catch (err) {
+                console.error("Reset failed", err);
+                alert("Error resetting data. Ensure backend is running.");
+            }
+        }
+
+        async function loginArtisanDirect(phone) {
+            try {
+                const res = await fetch(`${API_BASE}/artisan/login?contact_number=${phone}`, { method: "POST" });
+                if (res.ok) {
+                    activeArtisan = await res.json();
+                    onUserAuthenticated();
+                }
+            } catch (e) {
+                console.error("Login fail", e);
+            }
+        }
+
+        // 2. Register Artisan
+        async function registerArtisan() {
+            const name = document.getElementById("auth-name").value;
+            const phone = document.getElementById("auth-phone").value;
+            const state = document.getElementById("auth-state").value;
+            const pincode = document.getElementById("auth-pincode").value;
+            const language = document.getElementById("auth-lang").value;
+
+            try {
+                const response = await fetch(`${API_BASE}/artisan/register`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ name, contact_number: phone, state, language, pin_code: pincode })
+                });
+
+                if (response.ok) {
+                    activeArtisan = await response.json();
+                    toggleAuthModal();
+                    onUserAuthenticated();
+                    alert(`Welcome ${name}! Your account is registered.`);
+                } else {
+                    const err = await response.json();
+                    // If already registered, try log in
+                    if (err.detail.includes("already registered")) {
+                        await loginArtisanDirect(phone);
+                        toggleAuthModal();
+                    } else {
+                        alert("Error: " + err.detail);
+                    }
+                }
+            } catch (err) {
+                alert("Failed to connect to server. Run local server!");
+            }
+        }
+
+        function onUserAuthenticated() {
+            document.getElementById("welcome-alert").classList.add("hidden");
+            document.getElementById("artisan-badge").classList.remove("hidden");
+            document.getElementById("badge-artisan-name").innerText = activeArtisan.name;
+            document.getElementById("login-btn-text").innerText = "Logout";
+            
+            // Adjust state inside forms
+            document.getElementById("calc-state").value = activeArtisan.state.toLowerCase();
+
+            // Refresh dashboards
+            loadCatalog();
+            loadLedgerSummary();
+            loadLedgerList();
+        }
+
+        // 3. AI Studio: Select Vernacular Prompt Templates
+        function selectDemoPrompt(lang, text) {
+            document.getElementById("voice-text-fallback").value = text;
+            // Update micro status
+            document.getElementById("mic-status").innerText = `Vernacular target selected (${lang}). Click Generate details below.`;
+        }
+
+        // Whisper Microphone Recording simulation
+        function toggleMicrophone() {
+            const micBtn = document.getElementById("mic-btn");
+            const statusText = document.getElementById("mic-status");
+            micBtn.classList.add("animate-pulse", "bg-red-600");
+            statusText.innerText = "Listening to voice input... (Transcribing via simulated Whisper API)";
+            
+            setTimeout(() => {
+                micBtn.classList.remove("animate-pulse", "bg-red-600");
+                // Insert a smart random sample if empty
+                const prompts = [
+                    "मैंने अपने हाथों से मिट्टी का मटका बनाया है, प्राकृतिक लाल मिट्टी का उपयोग किया है।",
+                    "கைவினை செம்பு பாத்திரம் தண்ணீர் சேமிக்க சிறந்தது."
+                ];
+                document.getElementById("voice-text-fallback").value = prompts[Math.floor(Math.random() * prompts.length)];
+                statusText.innerText = "Whisper transcription success! Local language text mapped below.";
+            }, 1800);
+        }
+
+        // process voice listing
+        async function processVoiceListing() {
+            if (!activeArtisan) {
+                alert("Please login/register first to map products to your profile!");
+                return;
+            }
+            const fallbackText = document.getElementById("voice-text-fallback").value;
+            const voiceBtn = document.getElementById("voice-btn");
+            voiceBtn.disabled = true;
+            voiceBtn.innerText = "AI Processing Catalog Sheets...";
+
+            try {
+                const response = await fetch(`${API_BASE}/catalog/voice`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        voice_text_fallback: fallbackText,
+                        language: activeArtisan.language.toLowerCase(),
+                        artisan_id: activeArtisan.id
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById("ai-title").value = data.title;
+                    document.getElementById("ai-desc").value = data.description;
+                    document.getElementById("ai-category").value = data.category;
+                    document.getElementById("ai-hsn").value = data.hsn_code;
+                    document.getElementById("ai-price").value = data.suggested_price;
+                    
+                    alert("AI Generation Complete! Form updated on the right. You can edit before saving.");
+                }
+            } catch (e) {
+                alert("API processing error.");
+            } finally {
+                voiceBtn.disabled = false;
+                voiceBtn.innerText = "Generate AI Product Details";
+            }
+        }
+
+        // Preview local file uploads
+        function previewUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById("upload-preview").src = e.target.result;
+                    document.getElementById("ai-original-img").src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Generative Background Replacement
+        async function enhanceProductImage() {
+            const theme = document.getElementById("bg-theme").value;
+            const originalUrl = document.getElementById("ai-original-img").src;
+            const loader = document.getElementById("image-processing-loader");
+            
+            loader.classList.remove("hidden");
+
+            try {
+                const response = await fetch(`${API_BASE}/catalog/enhance-image`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ original_image_url: originalUrl, theme })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setTimeout(() => {
+                        document.getElementById("ai-enhanced-img").src = data.enhanced_image_url;
+                        document.getElementById("ai-enhanced-img").classList.remove("blur-[1px]");
+                        loader.classList.add("hidden");
+                    }, 1200); // Simulate generative pipeline lag
+                }
+            } catch (e) {
+                loader.classList.add("hidden");
+                alert("Generative API failed.");
+            }
+        }
+
+        // Save catalog item
+        async function saveProductCatalog() {
+            if (!activeArtisan) {
+                alert("Auth required.");
+                return;
+            }
+            const product = {
+                title: document.getElementById("ai-title").value,
+                description: document.getElementById("ai-desc").value,
+                base_price: parseFloat(document.getElementById("ai-price").value),
+                dynamic_price: parseFloat(document.getElementById("ai-price").value),
+                category: document.getElementById("ai-category").value,
+                hsn_code: document.getElementById("ai-hsn").value,
+                image_url: document.getElementById("ai-enhanced-img").src,
+                original_image_url: document.getElementById("ai-original-img").src,
+                artisan_id: activeArtisan.id
+            };
+
+            try {
+                const res = await fetch(`${API_BASE}/catalog/products`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(product)
+                });
+                
+                if (res.ok) {
+                    alert("Product cataloged successfully as a local draft!");
+                    switchTab("dashboard");
+                    loadCatalog();
+                }
+            } catch (e) {
+                alert("Database save failed.");
+            }
+        }
+
+        // 4. Load Catalog Products
+        async function loadCatalog() {
+            if (!activeArtisan) return;
+            try {
+                const res = await fetch(`${API_BASE}/catalog/products/artisan/${activeArtisan.id}`);
+                const products = await res.json();
+                
+                const grid = document.getElementById("product-grid");
+                document.getElementById("stat-listings").innerText = products.length;
+
+                if (products.length === 0) {
+                    grid.innerHTML = `<div class="col-span-full py-12 text-center text-stone-400">
+                        <i class="fa-solid fa-box-open text-4xl mb-2 block"></i> No products found. Click "Add Item" to add!
+                    </div>`;
+                    return;
+                }
+
+                grid.innerHTML = products.map(p => `
+                    <div class="bg-stone-50 border border-stone-200 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between hover:shadow-md transition">
+                        <div>
+                            <div class="h-44 relative bg-stone-100">
+                                <img src="${p.image_url || 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Blue_pottery_from_Jaipur_2.jpg/800px-Blue_pottery_from_Jaipur_2.jpg'}" class="w-full h-full object-cover" alt="${p.title}">
+                                <span class="absolute top-3 right-3 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full ${
+                                    p.status === 'Listed_ONDC' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+                                }">${p.status}</span>
+                            </div>
+                            <div class="p-4 flex flex-col gap-1.5">
+                                <span class="text-[9px] uppercase tracking-wider font-semibold text-terracotta">${p.category}</span>
+                                <h4 class="font-bold text-stone-800 text-sm line-clamp-1">${p.title}</h4>
+                                <p class="text-stone-500 text-xs line-clamp-2">${p.description}</p>
+                            </div>
+                        </div>
+                        <div class="px-4 pb-4 pt-2 border-t border-stone-100 flex items-center justify-between">
+                            <span class="font-extrabold text-forest text-sm">₹${p.base_price}</span>
+                            ${p.status === 'Draft' ? `
+                                <button onclick="publishToONDC(${p.id})" class="bg-forest text-white text-[10px] font-bold px-3 py-1.5 rounded-lg hover:bg-emerald-950 shadow-sm transition">
+                                    <i class="fa-solid fa-globe mr-1"></i> List ONDC
+                                </button>
+                            ` : `
+                                <span class="text-emerald-700 text-xs font-semibold"><i class="fa-solid fa-check-circle mr-1"></i> Listed</span>
+                            `}
+                        </div>
+                    </div>
+                `).join("");
+            } catch (e) {
+                console.error("Load products fail", e);
+            }
+        }
+
+        async function publishToONDC(prodId) {
+            try {
+                const res = await fetch(`${API_BASE}/catalog/products/${prodId}/publish-ondc`, { method: "POST" });
+                if (res.ok) {
+                    alert("Published onto the global ONDC protocol registry! Ready for delivery pooling.");
+                    loadCatalog();
+                    loadLedgerSummary();
+                }
+            } catch(e) {
+                alert("ONDC listing failed.");
+            }
+        }
+
+        // 5. Offline Ledger (Khata) Logic
+        let selectedTxType = "SALE";
+        function selectTxType(type) {
+            selectedTxType = type;
+            const saleBtn = document.getElementById("tx-type-sale");
+            const expBtn = document.getElementById("tx-type-expense");
+            
+            if (type === "SALE") {
+                saleBtn.className = "py-2 rounded-lg border border-emerald-500 bg-emerald-50 text-emerald-800 font-bold text-xs text-center transition";
+                expBtn.className = "py-2 rounded-lg border border-stone-200 bg-white text-stone-600 font-medium text-xs text-center transition";
+            } else {
+                expBtn.className = "py-2 rounded-lg border border-red-500 bg-red-50 text-red-800 font-bold text-xs text-center transition";
+                saleBtn.className = "py-2 rounded-lg border border-stone-200 bg-white text-stone-600 font-medium text-xs text-center transition";
+            }
+        }
+
+        // Local offline transactions storage simulation
+        function addKhataTransaction() {
+            if (!activeArtisan) {
+                alert("Auth required.");
+                return;
+            }
+            const amount = parseFloat(document.getElementById("khata-amount").value);
+            const details = document.getElementById("khata-details").value;
+            
+            if (!amount || !details) {
+                alert("Enter valid amount and details");
+                return;
+            }
+
+            const newTx = {
+                type: selectedTxType,
+                amount: amount,
+                details: details,
+                sync_status: "Pending Sync", // Mock offline creation
+                artisan_id: activeArtisan.id,
+                timestamp: new Date().toISOString()
+            };
+
+            dbTransactions.unshift(newTx);
+            document.getElementById("khata-amount").value = "";
+            document.getElementById("khata-details").value = "";
+            
+            // Adjust visual connected status
+            const badge = document.getElementById("khata-status-badge");
+            badge.className = "bg-amber-100 text-amber-800 text-[10px] px-2 py-0.5 rounded font-semibold flex items-center gap-1";
+            badge.innerHTML = `<span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span> Unsaved Offline Drafts`;
+
+            renderLocalLedger();
+            recalculateLocalSummary();
+        }
+
+        function renderLocalLedger() {
+            const list = document.getElementById("khata-list");
+            if (dbTransactions.length === 0) {
+                list.innerHTML = `<div class="py-12 text-center text-stone-400">
+                    <i class="fa-solid fa-receipt text-3xl mb-2 block"></i> No records.
+                </div>`;
+                return;
+            }
+            
+            list.innerHTML = dbTransactions.map(tx => `
+                <div class="px-4 py-3 flex items-center justify-between hover:bg-stone-50 transition">
+                    <div class="flex items-center gap-3">
+                        <div class="h-8 w-8 rounded-full flex items-center justify-center text-sm ${
+                            tx.type === 'SALE' ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'
+                        }">
+                            <i class="fa-solid ${tx.type === 'SALE' ? 'fa-arrow-down' : 'fa-arrow-up'}"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold text-stone-800">${tx.details}</p>
+                            <p class="text-[9px] text-stone-400">${new Date(tx.timestamp).toLocaleString()}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs font-bold ${tx.type === 'SALE' ? 'text-emerald-700' : 'text-red-700'}">
+                            ${tx.type === 'SALE' ? '+' : '-'} ₹${tx.amount}
+                        </p>
+                        <span class="text-[9px] font-medium px-1.5 py-0.2 rounded-full ${
+                            tx.sync_status === 'Synced' ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600 border border-amber-200'
+                        }">${tx.sync_status}</span>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        function recalculateLocalSummary() {
+            let sales = 0;
+            let exp = 0;
+            dbTransactions.forEach(t => {
+                if (t.type === "SALE") sales += t.amount;
+                else exp += t.amount;
+            });
+            const profit = sales - exp;
+            
+            document.getElementById("stat-sales").innerText = `₹${sales.toFixed(2)}`;
+            document.getElementById("stat-profit").innerText = `₹${profit.toFixed(2)}`;
+        }
+
+        async function syncKhataTransactions() {
+            if (!activeArtisan) return;
+            const unsynced = dbTransactions.filter(t => t.sync_status === "Pending Sync");
+            
+            if (unsynced.length === 0) {
+                alert("All ledger transactions are already synced to the cloud!");
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/khata/sync`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(unsynced)
+                });
+                
+                if (response.ok) {
+                    alert("Synced offline transaction logs to cloud database!");
+                    await loadLedgerList();
+                    await loadLedgerSummary();
+                }
+            } catch(e) {
+                alert("Failed to sync. Check network connection.");
+            }
+        }
+
+        async function loadLedgerList() {
+            if (!activeArtisan) return;
+            try {
+                const res = await fetch(`${API_BASE}/khata/artisan/${activeArtisan.id}`);
+                const data = await res.json();
+                dbTransactions = data;
+                renderLocalLedger();
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        async function loadLedgerSummary() {
+            if (!activeArtisan) return;
+            try {
+                const res = await fetch(`${API_BASE}/khata/summary/${activeArtisan.id}`);
+                const data = await res.json();
+                
+                document.getElementById("stat-sales").innerText = `₹${data.total_sales.toFixed(2)}`;
+                document.getElementById("stat-profit").innerText = `₹${data.net_profit.toFixed(2)}`;
+                
+                const badge = document.getElementById("khata-status-badge");
+                badge.className = "bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded font-semibold flex items-center gap-1";
+                badge.innerHTML = `<span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span> Connected`;
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        // 6. Text-to-Speech (Audio read-out for illiterate artisans)
+        function readLedgerAloud() {
+            if (!activeArtisan) return;
+            
+            let sales = 0;
+            let exp = 0;
+            dbTransactions.forEach(t => {
+                if (t.type === "SALE") sales += t.amount;
+                else exp += t.amount;
+            });
+            const profit = sales - exp;
+            
+            // Generate Hindi audio statement using browser Speech Synthesis API
+            let message = `नमस्ते ${activeArtisan.name}. आपका कुल खाता विवरण इस प्रकार है. कुल बिक्री ${sales} रुपये है. कुल खर्च ${exp} रुपये है. आपका कुल शुद्ध मुनाफा ${profit} रुपये है. `;
+            if (profit > 0) {
+                message += "काम अच्छा चल रहा है!";
+            } else if (profit < 0) {
+                message += "कृपया अपने खर्चों पर ध्यान दें.";
+            }
+
+            const utterance = new SpeechSynthesisUtterance(message);
+            utterance.lang = "hi-IN";
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // 7. Fair Wage Calculator
+        async function calculatePrice() {
+            const state = document.getElementById("calc-state").value;
+            const desiredWage = parseFloat(document.getElementById("calc-desired-wage").value);
+            const material = parseFloat(document.getElementById("calc-materials").value);
+            const hours = parseFloat(document.getElementById("calc-hours").value);
+            const overhead = parseFloat(document.getElementById("calc-overheads").value);
+
+            try {
+                const response = await fetch(`${API_BASE}/utilities/fair-price`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        material_cost: material,
+                        labor_hours: hours,
+                        overhead_cost: overhead,
+                        desired_hourly_wage: desiredWage / 8, // Divide daily into 8h
+                        artisan_state: state
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById("calc-results-card").classList.remove("hidden");
+                    
+                    document.getElementById("res-material").innerText = `₹${data.material_cost.toFixed(2)}`;
+                    document.getElementById("res-labor").innerText = `₹${data.labor_cost.toFixed(2)}`;
+                    document.getElementById("res-hours").innerText = hours;
+                    document.getElementById("res-min-rate").innerText = `State Min: ₹${(data.state_minimum_hourly_rate * 8).toFixed(2)}/day (₹${data.state_minimum_hourly_rate.toFixed(2)}/h)`;
+                    document.getElementById("res-overheads").innerText = `₹${overhead.toFixed(2)}`;
+                    document.getElementById("res-production").innerText = `₹${data.production_cost.toFixed(2)}`;
+                    document.getElementById("res-retail").innerText = `₹${data.suggested_direct_retail_price.toFixed(2)}`;
+                    document.getElementById("res-wholesale").innerText = `₹${data.suggested_wholesale_price.toFixed(2)}`;
+                    
+                    const indicator = document.getElementById("calc-wage-compliance");
+                    indicator.innerText = data.wage_fairness_indicator;
+                    if (data.wage_fairness_indicator === "Fair & Compliant") {
+                        indicator.className = "bg-emerald-100 text-emerald-800 text-[10px] px-2.5 py-0.5 rounded-full font-bold";
+                    } else {
+                        indicator.className = "bg-red-100 text-red-800 text-[10px] px-2.5 py-0.5 rounded-full font-bold";
+                    }
+                }
+            } catch(e) {
+                alert("Calculation failed.");
+            }
+        }
+
+        // 8. Load Local Trends
+        async function loadTrends() {
+            if (!activeArtisan) return;
+            try {
+                const res = await fetch(`${API_BASE}/utilities/trends/${activeArtisan.state}`);
+                const data = await res.json();
+                
+                const grid = document.getElementById("trends-grid");
+                grid.innerHTML = data.trends.map(t => `
+                    <div class="bg-stone-50 border border-stone-200 p-5 rounded-2xl shadow-sm flex flex-col gap-3 hover:border-terracotta transition">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="bg-red-50 text-red-700 text-[9px] font-bold px-2 py-0.5 rounded uppercase">${t.demand_level} Demand</span>
+                                <h4 class="font-bold text-stone-800 text-base mt-1.5">${t.title}</h4>
+                            </div>
+                            <span class="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 py-1 rounded">${t.growth}</span>
+                        </div>
+                        <p class="text-xs text-stone-600 leading-relaxed">${t.advice}</p>
+                    </div>
+                `).join("");
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        // 9. Load Logistics Pools
+        async function loadLogisticsPools() {
+            try {
+                const res = await fetch(`${API_BASE}/utilities/logistics-pools`);
+                const pools = await res.json();
+                
+                const grid = document.getElementById("logistics-grid");
+                if (pools.length === 0) {
+                    grid.innerHTML = `<div class="col-span-full py-12 text-center text-stone-400">
+                        <i class="fa-solid fa-truck-ramp-box text-4xl mb-2 block"></i> No active delivery pools for your pincode.
+                    </div>`;
+                    return;
+                }
+
+                grid.innerHTML = pools.map(p => `
+                    <div class="bg-stone-50 border border-stone-200 p-5 rounded-2xl shadow-sm flex flex-col gap-4">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h4 class="font-bold text-stone-800 text-sm">${p.village_name}</h4>
+                                <span class="text-[10px] text-stone-400 font-semibold uppercase tracking-wider">PINCODE: ${p.pincode}</span>
+                            </div>
+                            <span class="text-xs font-semibold px-2 py-0.5 rounded-full ${
+                                p.status === 'Collecting' ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'
+                            }">${p.status}</span>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <div class="bg-white p-2 rounded-lg border border-stone-100">
+                                <span class="text-stone-400 block text-[9px] uppercase font-bold">Total Weight</span>
+                                <span class="font-bold text-stone-700">${p.total_weight.toFixed(1)} kg</span>
+                            </div>
+                            <div class="bg-white p-2 rounded-lg border border-stone-100">
+                                <span class="text-stone-400 block text-[9px] uppercase font-bold">Orders Pool</span>
+                                <span class="font-bold text-stone-700">${p.orders_count} packages</span>
+                            </div>
+                        </div>
+
+                        ${p.status === 'Collecting' ? `
+                            <div class="flex flex-col gap-1.5">
+                                <div class="w-full bg-stone-200 h-2 rounded-full overflow-hidden">
+                                    <div class="bg-forest h-full rounded-full" style="width: ${Math.min((p.total_weight / 10) * 100, 100)}%"></div>
+                                </div>
+                                <span class="text-[9px] text-stone-500 font-semibold">${p.total_weight.toFixed(1)}/10.0 kg required for bulk discount</span>
+                            </div>
+                            <button onclick="dispatchLogisticsPool(${p.id})" class="w-full bg-forest text-white text-xs py-2 rounded-xl hover:bg-emerald-950 font-bold shadow-sm transition">
+                                <i class="fa-solid fa-paper-plane mr-1"></i> Force Dispatch (India Post)
+                            </button>
+                        ` : `
+                            <span class="text-center text-emerald-700 text-xs font-semibold py-2 bg-emerald-50 rounded-xl"><i class="fa-solid fa-truck-fast mr-1"></i> Dispatched via India Post</span>
+                        `}
+                    </div>
+                `).join("");
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        async function dispatchLogisticsPool(poolId) {
+            try {
+                const res = await fetch(`${API_BASE}/utilities/logistics-pools/dispatch/${poolId}`, { method: "POST" });
+                if (res.ok) {
+                    alert("Dispatched! Group shipment tracking details generated.");
+                    loadLogisticsPools();
+                }
+            } catch (e) {
+                alert("Logistics error.");
+            }
+        }
+    </script>
+</body>
+</html>
