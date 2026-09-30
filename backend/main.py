@@ -12,11 +12,11 @@ from typing import List
 try:
     from .database import engine, Base, get_db
     from . import models, schemas
-    from .routers import counseling, district_radar, catalog, khata, utilities
+    from .routers import counseling, district_radar
 except (ImportError, ValueError):
     from database import engine, Base, get_db
     import models, schemas
-    from routers import counseling, district_radar, catalog, khata, utilities
+    from routers import counseling, district_radar
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -39,9 +39,6 @@ app.add_middleware(
 # Include Routers
 app.include_router(counseling.router)
 app.include_router(district_radar.router)
-app.include_router(catalog.router)
-app.include_router(khata.router)
-app.include_router(utilities.router)
 
 @app.get("/")
 def health_check():
