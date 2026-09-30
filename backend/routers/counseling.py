@@ -172,7 +172,7 @@ NSQF_TRADE_DATABASE = {
 
 @router.get("/presets")
 def get_presets():
-    """Returns pre-configured rural beneficiary test cases for SIH judges demo"""
+    """Returns pre-configured rural beneficiary test cases for live verification demo"""
     return PRESET_CANDIDATES
 
 

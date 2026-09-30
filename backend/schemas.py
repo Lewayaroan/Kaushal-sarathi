@@ -3,7 +3,7 @@ from typing import List, Optional, Dict, Any
 from datetime import datetime
 
 # ==========================================================
-# KAUSHAL SARATHI (SIH26097) SCHEMAS
+# KAUSHAL SARATHI SCHEMAS
 # ==========================================================
 
 class VoiceCounselingRequest(BaseModel):

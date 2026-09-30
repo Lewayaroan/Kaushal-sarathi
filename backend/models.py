@@ -8,7 +8,7 @@ except (ImportError, ValueError):
     from database import Base
 
 # ==========================================================
-# KAUSHAL SARATHI (SIH26097 - MoSJE PM-AJAY GIA) MODELS
+# KAUSHAL SARATHI - MoSJE PM-AJAY GIA MODELS
 # ==========================================================
 
 class Beneficiary(Base):

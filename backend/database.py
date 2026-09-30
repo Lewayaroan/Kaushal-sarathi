@@ -3,11 +3,17 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-# We'll use a local SQLite database for maximum portability and simplicity
-DATABASE_URL = "sqlite:///./sih_artisan.db"
+# Database URL with environment variable support for cloud deployment (Render PostgreSQL/SQLite)
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./kaushal_sarathi.db")
+
+# Fix Render PostgreSQL URI scheme if needed (postgres:// -> postgresql://)
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
 
 engine = create_engine(
-    DATABASE_URL, connect_args={"check_same_thread": False}
+    DATABASE_URL, connect_args=connect_args
 )
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

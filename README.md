@@ -1,11 +1,10 @@
 # Kaushal Sarathi (कौशल सारथी) 🇮🇳
 
 ### **AI-Driven Voice Assistant for Livelihood Mapping & NSQF-Aligned Skilling Recommendations under PM-AJAY (GIA Component)**
-* **Smart India Hackathon (SIH 2026)**
-* **Problem Statement ID:** `SIH26097`  
 * **Ministry:** Ministry of Social Justice and Empowerment (MoSJE)  
-* **Theme:** Agriculture, FoodTech & Rural Development / Social Inclusion
-* **Team Name:** VoltEdge
+* **Scheme:** Pradhan Mantri Anusuchit Jaati Abhyuday Yojana (PM-AJAY) - Grant-in-Aid (GIA) Component  
+* **Target Audience:** Scheduled Caste (SC) Beneficiaries, Rural Youth, and Informal Artisans  
+* **Deployment:** Live on Vercel (Frontend SPA) & Render (Backend API)  
 
 ---
 
@@ -97,7 +96,9 @@ flowchart LR
 
 ---
 
-## 👥 Team Details
-* **Team Name:** VoltEdge
-* **Hackathon:** Smart India Hackathon (SIH 2026)
-* **Category:** Software
+## 🏛️ Regulatory & Policy Compliance
+* **Standard Qualification Register:** National Skills Qualification Framework (NSQF Levels 1 to 5)
+* **Target Scheme:** PM-AJAY Grant-in-Aid (GIA) Component for SC Livelihoods
+* **Public Data Integration:** `api.data.gov.in` (Open Government Data - OGD Platform India)
+* **Speech & Dialect Engine:** Digital India Bhashini (NLTM) Voice AI Integration
+
