@@ -245,11 +245,31 @@
             <!-- TAB 2: VOICE INTAKE -->
             <div id="tab-counseling" class="tab-content hidden flex flex-col gap-6">
                 <div class="border-b border-stone-200 pb-3 flex justify-between items-center">
+                <div class="border-b border-stone-200 pb-3 flex flex-wrap justify-between items-center gap-3">
                     <div>
                         <h2 class="text-lg font-bold text-stone-800 flex items-center gap-2">
                             <i class="fa-solid fa-microphone-lines text-terracotta"></i> Voice Intake Studio
                         </h2>
-                        <p class="text-stone-500 text-xs mt-0.5">Spoken language analysis for trade matching and skill recognition.</p>
+                        <p class="text-stone-500 text-xs mt-0.5">Multilingual vernacular voice analysis for trade matching and skill recognition.</p>
+                    </div>
+
+                    <!-- Multilingual Language Selector Bar -->
+                    <div class="flex items-center gap-1.5 bg-stone-100 p-1 rounded-xl border border-stone-200">
+                        <span class="text-[11px] font-semibold text-stone-500 px-2 flex items-center gap-1">
+                            <i class="fa-solid fa-language text-forest"></i> Language:
+                        </span>
+                        <button onclick="setVoiceLanguage('en')" id="lang-btn-en" class="voice-lang-btn px-2.5 py-1 rounded-lg text-xs font-semibold bg-forest text-white shadow-sm transition">
+                            English
+                        </button>
+                        <button onclick="setVoiceLanguage('hi')" id="lang-btn-hi" class="voice-lang-btn px-2.5 py-1 rounded-lg text-xs font-semibold text-stone-700 hover:bg-white transition">
+                            हिन्दी (Hindi)
+                        </button>
+                        <button onclick="setVoiceLanguage('ta')" id="lang-btn-ta" class="voice-lang-btn px-2.5 py-1 rounded-lg text-xs font-semibold text-stone-700 hover:bg-white transition">
+                            தமிழ் (Tamil)
+                        </button>
+                        <button onclick="setVoiceLanguage('te')" id="lang-btn-te" class="voice-lang-btn px-2.5 py-1 rounded-lg text-xs font-semibold text-stone-700 hover:bg-white transition">
+                            తెలుగు (Telugu)
+                        </button>
                     </div>
                 </div>
 
@@ -261,19 +281,19 @@
                             <div class="grid grid-cols-2 gap-2 mb-3">
                                 <button onclick="selectDemoPrompt('solar')" class="border border-stone-200 rounded-xl p-2.5 text-left text-xs bg-white hover:bg-stone-100 transition">
                                     <span class="font-bold text-stone-800 block">Solar Pump / Motor</span>
-                                    <span class="text-stone-400 text-[11px] truncate block">Water motor and electrical wiring experience...</span>
+                                    <span id="prompt-desc-solar" class="text-stone-400 text-[11px] truncate block">Water motor and electrical wiring experience...</span>
                                 </button>
                                 <button onclick="selectDemoPrompt('handloom')" class="border border-stone-200 rounded-xl p-2.5 text-left text-xs bg-white hover:bg-stone-100 transition">
                                     <span class="font-bold text-stone-800 block">Handloom Weaver</span>
-                                    <span class="text-stone-400 text-[11px] truncate block">Traditional loom warping and zari border weaving...</span>
+                                    <span id="prompt-desc-handloom" class="text-stone-400 text-[11px] truncate block">Traditional loom warping and zari border weaving...</span>
                                 </button>
                                 <button onclick="selectDemoPrompt('tractor')" class="border border-stone-200 rounded-xl p-2.5 text-left text-xs bg-white hover:bg-stone-100 transition">
                                     <span class="font-bold text-stone-800 block">Agri Machinery</span>
-                                    <span class="text-stone-400 text-[11px] truncate block">Tractor alternator, diesel engine & implement repair...</span>
+                                    <span id="prompt-desc-tractor" class="text-stone-400 text-[11px] truncate block">Tractor alternator, diesel engine & implement repair...</span>
                                 </button>
                                 <button onclick="selectDemoPrompt('tailoring')" class="border border-stone-200 rounded-xl p-2.5 text-left text-xs bg-white hover:bg-stone-100 transition">
                                     <span class="font-bold text-stone-800 block">Garment & Tailoring</span>
-                                    <span class="text-stone-400 text-[11px] truncate block">Stitching, seam assembly, and fabric cutting...</span>
+                                    <span id="prompt-desc-tailoring" class="text-stone-400 text-[11px] truncate block">Stitching, seam assembly, and fabric cutting...</span>
                                 </button>
                             </div>
 
@@ -286,7 +306,7 @@
                             </div>
                             <div class="flex justify-between items-center mt-2">
                                 <span id="mic-status" class="text-stone-400 text-xs">Tap mic to speak or select a preset above</span>
-                                <span id="speech-lang-tag" class="text-[11px] bg-stone-200 text-stone-700 px-2 py-0.5 rounded font-medium">Indic Dialect Voice Input</span>
+                                <span id="speech-lang-tag" class="text-[11px] bg-stone-200 text-stone-700 px-2 py-0.5 rounded font-medium">English (en-IN)</span>
                             </div>
                         </div>
 
@@ -308,31 +328,44 @@
                                     <span id="result-confidence" class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-lg">94% Confidence</span>
                                 </div>
 
-                                <hr class="my-3.5 border-stone-200">
+                                <hr class="my-3 border-stone-200">
 
-                                <div class="grid grid-cols-2 gap-3 text-xs">
-                                    <div class="bg-white p-3 rounded-xl border border-stone-200">
-                                        <span class="text-stone-400 block font-medium">Sector</span>
+                                <div class="grid grid-cols-2 gap-2.5 text-xs">
+                                    <div class="bg-white p-2.5 rounded-xl border border-stone-200">
+                                        <span class="text-stone-400 block font-medium text-[11px]">Sector</span>
                                         <strong id="result-sector" class="text-stone-800">Green Energy & Electrical</strong>
                                     </div>
-                                    <div class="bg-white p-3 rounded-xl border border-stone-200">
-                                        <span class="text-stone-400 block font-medium">RPL Prior Experience</span>
+                                    <div class="bg-white p-2.5 rounded-xl border border-stone-200">
+                                        <span class="text-stone-400 block font-medium text-[11px]">RPL Prior Experience</span>
                                         <strong id="result-rpl-exp" class="text-stone-800">2.0 Years (160h Credit)</strong>
                                     </div>
-                                    <div class="bg-white p-3 rounded-xl border border-stone-200">
-                                        <span class="text-stone-400 block font-medium">Nearest Training Center</span>
+                                    <div class="bg-white p-2.5 rounded-xl border border-stone-200">
+                                        <span class="text-stone-400 block font-medium text-[11px]">Nearest Center</span>
                                         <strong id="result-center-name" class="text-stone-800">Jaipur Rural PM-AJAY Center</strong>
                                     </div>
-                                    <div class="bg-white p-3 rounded-xl border border-stone-200">
-                                        <span class="text-stone-400 block font-medium">Distance & Batch</span>
+                                    <div class="bg-white p-2.5 rounded-xl border border-stone-200">
+                                        <span class="text-stone-400 block font-medium text-[11px]">Distance & Batch</span>
                                         <strong id="result-center-dist" class="text-stone-800">7.8 km (Batch: Oct 15)</strong>
                                     </div>
+                                </div>
+
+                                <!-- Conversational Vernacular Readout Box -->
+                                <div class="mt-3 p-3 bg-white rounded-xl border border-stone-200 shadow-inner">
+                                    <div class="flex items-center justify-between mb-1">
+                                        <span class="text-[10px] font-bold uppercase tracking-wider text-forest flex items-center gap-1.5">
+                                            <i class="fa-solid fa-volume-high text-xs text-terracotta"></i> Spoken Output (<span id="output-lang-label">English</span>)
+                                        </span>
+                                        <span class="text-[9px] bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded font-semibold" id="output-voice-engine">Voice AI Ready</span>
+                                    </div>
+                                    <p id="output-spoken-text" class="text-xs text-stone-700 italic leading-relaxed">
+                                        "Hello Ravi Kumar. Based on your practical experience, your identified qualification is Solar PV & Water Pump Technician at NSQF Level 3. You are pre-approved for ₹24,500 under PM-AJAY Grant-in-Aid, including monthly stipend and free toolkit."
+                                    </p>
                                 </div>
                             </div>
 
                             <div class="mt-4 pt-3 border-t border-stone-200 flex items-center justify-between">
-                                <button onclick="speakAudioResult()" class="text-forest hover:underline text-xs font-semibold flex items-center gap-1.5">
-                                    <i class="fa-solid fa-volume-high"></i> Audio Readout
+                                <button onclick="speakAudioResult()" id="btn-audio-readout" class="bg-forest/10 hover:bg-forest/20 text-forest text-xs font-semibold px-3 py-1.5 rounded-xl flex items-center gap-1.5 transition">
+                                    <i class="fa-solid fa-volume-high"></i> <span id="readout-btn-label">Audio Readout (Play)</span>
                                 </button>
                                 <button onclick="switchTab('grant')" class="bg-terracotta text-white text-xs px-3.5 py-2 rounded-xl hover-bg-terracotta font-semibold transition flex items-center gap-1.5 shadow-sm">
                                     View Entitlements <i class="fa-solid fa-arrow-right text-[10px]"></i>
@@ -767,7 +800,6 @@
                 village: "Bassi",
                 district: "Jaipur Rural",
                 state: "Rajasthan",
-                voiceText: "I studied up to 8th class. In our village, I help my uncle fix water pump motors and electrical cables on agricultural tube wells.",
                 trade: "Solar PV & Water Pump Technician",
                 qpNos: "QP-ELE/Q5801",
                 nsqfLevel: 3,
@@ -794,7 +826,6 @@
                 village: "Jalvayu Puram",
                 district: "Salem",
                 state: "Tamil Nadu",
-                voiceText: "I have been helping my family weave cotton sarees and silk dhotis on traditional handlooms for 4 years.",
                 trade: "Jacquard Handloom & Fabric Artisan",
                 qpNos: "QP-TEX/Q1204",
                 nsqfLevel: 4,
@@ -821,7 +852,6 @@
                 village: "Rohania",
                 district: "Varanasi",
                 state: "Uttar Pradesh",
-                voiceText: "I work with local mechanics repairing tractor alternators, rotavators, and diesel spray pumps for farmers.",
                 trade: "Agricultural Machinery Service Technician",
                 qpNos: "QP-AGR/Q1102",
                 nsqfLevel: 3,
@@ -838,10 +868,145 @@
                 vacancies: "42 Openings",
                 hiringIndex: "92%",
                 demandDriver: "SHG Bio-Fertilizer & Farm Mechanization Hub"
+            },
+            tailoring: {
+                id: "KS-2026-RAJ-1205",
+                name: "Pooja Meghwal",
+                age: 22,
+                category: "SC",
+                education: "10th Standard",
+                village: "Chaksu",
+                district: "Jaipur Rural",
+                state: "Rajasthan",
+                trade: "Garment Construction & Tailoring Technician",
+                qpNos: "QP-AMH/Q1947",
+                nsqfLevel: 3,
+                sector: "Apparel & Garments",
+                rplCredit: "3.0 Years (160h Credit)",
+                confidence: "95%",
+                grantTotal: "₹24,000",
+                stipend: "₹2,500 / mo",
+                toolkit: "Heavy Tailoring Shears, Measuring Gauge, Pressing Iron, Motorized Stitching Kit",
+                center: "Jaipur Rural Apparel Training Center",
+                centerLoc: "Chaksu Block, Jaipur Rural",
+                distance: "5.4 km",
+                batch: "October 18, 2026",
+                vacancies: "46 Openings",
+                hiringIndex: "91%",
+                demandDriver: "Rural Uniform & Apparel Stitching SHG Cluster"
+            }
+        };
+
+        // Multilingual Voice Input and Output Database (English, Hindi, Tamil, Telugu)
+        const MULTILINGUAL_DATA = {
+            ravi: {
+                en: {
+                    input: "I studied up to 8th class. In our village, I help my uncle fix water pump motors and electrical cables on agricultural tube wells.",
+                    output: "Hello Ravi Kumar. Based on your practical experience, your identified qualification is Solar PV & Water Pump Technician at NSQF Level 3. You are pre-approved for ₹24,500 under PM-AJAY Grant-in-Aid, including monthly stipend and free toolkit.",
+                    tag: "English (en-IN)",
+                    langName: "English"
+                },
+                hi: {
+                    input: "मैंने 8वीं तक पढ़ाई की है। मेरे गांव में मैं कृषि ट्यूबवेल पर पानी की मोटर और बिजली के तारों की मरम्मत में चाचा की मदद करता हूँ।",
+                    output: "नमस्ते रवि कुमार। आपके कार्य अनुभव के आधार पर, आपकी पहचानी गई योग्यता सोलर पीवी एवं वॉटर पंप तकनीशियन (NSQF लेवल 3) है। आप पीएम-अजय योजना के तहत ₹24,500 के सरकारी अनुदान, मासिक वजीफा और मुफ्त टूलकिट के लिए स्वीकृत हैं।",
+                    tag: "हिन्दी (hi-IN)",
+                    langName: "हिन्दी"
+                },
+                ta: {
+                    input: "நான் 8-ஆம் வகுப்பு வரை படித்துள்ளேன். எங்கள் கிராமத்தில் விவசாய ஆழ்துளை கிணறு மின் மோட்டார் மற்றும் வயரிங் பழுதுபார்க்கும் வேலையில் உதவுகிறேன்.",
+                    output: "வணக்கம் ரவி குமார். உங்கள் அனுபவத்தின் அடிப்படையில், உங்களின் தகுதி சோலார் மற்றும் வாட்டர் பம்ப் டெக்னீசியன் (NSQF நிலை 3). பிஎம்-அஜய் திட்டத்தின் கீழ் ₹24,500 அரசு மானியம், மாதாந்திர உதவித்தொகை மற்றும் இலவச டூல்கிட் உங்களுக்கு அனுமதிக்கப்பட்டுள்ளது.",
+                    tag: "தமிழ் (ta-IN)",
+                    langName: "தமிழ்"
+                },
+                te: {
+                    input: "నేను 8వ తరగతి వరకు చదివాను. మా గ్రామంలో వ్యవసాయ బోరు బావుల నీటి మోటార్లు మరియు కరెంట్ వైరింగ్ బాగు చేయడంలో మా బాబాయికి సహాయం చేస్తాను.",
+                    output: "నమస్కారం రవి కుమార్. మీ పని అనుభవం ఆధారంగా, మీ అర్హత సోలార్ పివి & వాటర్ పంప్ టెక్నీషియన్ (NSQF లెవల్ 3). పిఎం-అజయ్ పథకం కింద నెలకు స్టైఫండ్ మరియు ఉచిత టూల్‌కిట్‌తో సహా ₹24,500 ప్రభుత్వ గ్రాంట్‌కు మీరు అర్హులు.",
+                    tag: "తెలుగు (te-IN)",
+                    langName: "తెలుగు"
+                }
+            },
+            ananya: {
+                en: {
+                    input: "I have been helping my family weave cotton sarees and silk dhotis on traditional handlooms for 4 years.",
+                    output: "Hello Ananya Devi. Based on your practical experience, your identified qualification is Jacquard Handloom & Fabric Artisan at NSQF Level 4. You are pre-approved for ₹26,000 under PM-AJAY Grant-in-Aid, including monthly stipend and free toolkit.",
+                    tag: "English (en-IN)",
+                    langName: "English"
+                },
+                hi: {
+                    input: "मैं पिछले 4 वर्षों से अपने परिवार के साथ पारंपरिक हथकरघे पर सूती साड़ियाँ और रेशमी धोती बुनने का काम कर रही हूँ।",
+                    output: "नमस्ते अनन्या देवी। आपके अनुभव के आधार पर, आपकी योग्यता जैकार्ड हथकरघा एवं वस्त्र कारीगर (NSQF लेवल 4) है। आप पीएम-अजय योजना के तहत ₹26,000 के अनुदान एवं टूलकिट के लिए स्वीकृत हैं।",
+                    tag: "हिन्दी (hi-IN)",
+                    langName: "हिन्दी"
+                },
+                ta: {
+                    input: "நான் 4 வருடங்களாக எங்கள் குடும்ப பாரம்பரிய கைத்தறியில் பருத்தி புடவைகள் மற்றும் பட்டு வேட்டிகள் நெசவு செய்து வருகிறேன்.",
+                    output: "வணக்கம் அனன்யா தேவி. உங்கள் அனுபவத்தின் அடிப்படையில், உங்கள் தகுதி ஜாக்கார்ட் கைத்தறி நெசவு கலைஞர் (NSQF நிலை 4). பிஎம்-அஜய் திட்டத்தின் கீழ் ₹26,000 மானியம் மற்றும் நெசவு உபகரணங்கள் உங்களுக்கு அனுமதிக்கப்பட்டுள்ளது.",
+                    tag: "தமிழ் (ta-IN)",
+                    langName: "தமிழ்"
+                },
+                te: {
+                    input: "నేను 4 సంవత్సరాలుగా మా కుటుంబ సాంప్రదాయ మగ్గంపై కాటన్ చీరలు మరియు పట్టు ధోవతులు నేయడంలో సహాయం చేస్తున్నాను.",
+                    output: "నమస్కారం అనన్య దేవి. మీ అనుభవం ఆధారంగా, మీ అర్హత జకార్డ్ చేనేత మరియు వస్త్ర కళాకారుడు (NSQF లెవల్ 4). పిఎం-అజయ్ కింద ₹26,000 గ్రాంట్ మరియు ఉపకరణాల కోసం మీరు ఎంపికయ్యారు.",
+                    tag: "తెలుగు (te-IN)",
+                    langName: "తెలుగు"
+                }
+            },
+            suresh: {
+                en: {
+                    input: "I work with local mechanics repairing tractor alternators, rotavators, and diesel spray pumps for farmers.",
+                    output: "Hello Suresh Verma. Based on your practical experience, your identified qualification is Agricultural Machinery Service Technician at NSQF Level 3. You are pre-approved for ₹25,000 under PM-AJAY Grant-in-Aid, including monthly stipend and free toolkit.",
+                    tag: "English (en-IN)",
+                    langName: "English"
+                },
+                hi: {
+                    input: "मैं स्थानीय मैकेनिक के साथ किसानों के ट्रैक्टर अल्टरनेटर, रोटावेटर और डीजल स्प्रे पंप की मरम्मत का काम करता हूँ।",
+                    output: "नमस्ते सुरेश वर्मा। आपके अनुभव के आधार पर, आपकी योग्यता कृषि मशीनरी सेवा तकनीशियन (NSQF लेवल 3) है। आप पीएम-अजय के तहत ₹25,000 अनुदान और टूलकिट के लिए स्वीकृत हैं।",
+                    tag: "हिन्दी (hi-IN)",
+                    langName: "हिन्दी"
+                },
+                ta: {
+                    input: "நான் உள்ளூர் பட்டறையில் விவசாய டிராக்டர் ஆல்டர்னேட்டர், டீசல் இன்ஜின் மற்றும் பம்புகள் பழுதுபார்க்கும் வேலை செய்கிறேன்.",
+                    output: "வணக்கம் சுரேஷ் வர்மா. உங்கள் அனுபவத்தின் அடிப்படையில், உங்களின் தகுதி விவசாய இயந்திர பழுதுபார்ப்பு டெக்னீசியன் (NSQF நிலை 3). பிஎம்-அஜய் திட்டத்தின் கீழ் ₹25,000 மானியம் உங்களுக்கு அனுமதிக்கப்பட்டுள்ளது.",
+                    tag: "தமிழ் (ta-IN)",
+                    langName: "தமிழ்"
+                },
+                te: {
+                    input: "నేను స్థానిక మెకానిక్ వద్ద రైతులకు ట్రాక్టర్ ఆల్టర్నేటర్లు, రోటవేటర్లు మరియు డీజిల్ పంపుల రిపేర్ పనులు చేస్తున్నాను.",
+                    output: "నమస్కారం సురేష్ వర్మ. మీ అనుభవం ఆధారంగా, మీ అర్హత వ్యవసాయ యంత్రాల సర్వీస్ టెక్నీషియన్ (NSQF లెవల్ 3). పిఎం-అజయ్ పథకం కింద ₹25,000 గ్రాంట్‌కు మీరు అర్హులు.",
+                    tag: "తెలుగు (te-IN)",
+                    langName: "తెలుగు"
+                }
+            },
+            tailoring: {
+                en: {
+                    input: "I have 3 years experience stitching school uniforms, cutting fabrics, and tailoring garments on sewing machines.",
+                    output: "Based on your stitching experience, your qualification is Garment Construction & Tailoring Technician at NSQF Level 3 with ₹24,000 PM-AJAY grant entitlement.",
+                    tag: "English (en-IN)",
+                    langName: "English"
+                },
+                hi: {
+                    input: "मुझे सिलाई मशीन पर स्कूल की वर्दी सिलने, कपड़ा काटने और गारमेंट तैयार करने का 3 साल का अनुभव है।",
+                    output: "आपके सिलाई अनुभव के आधार पर, आपकी योग्यता गारमेंट टेलरिंग तकनीशियन (NSQF लेवल 3) है, जिसके तहत ₹24,000 का सरकारी अनुदान स्वीकृत है।",
+                    tag: "हिन्दी (hi-IN)",
+                    langName: "हिन्दी"
+                },
+                ta: {
+                    input: "தையல் இயந்திரத்தில் பள்ளி சீருடைகள் தைப்பது மற்றும் ஆடைகள் வடிவமைப்பதில் எனக்கு 3 வருட அனுபவம் உள்ளது.",
+                    output: "உங்கள் தையல் அனுபவத்தின் அடிப்படையில், உங்களின் தகுதி ஆடை தையல் கலைஞர் (NSQF நிலை 3). பிஎம்-அஜய் ₹24,000 அரசு மானியம் உங்களுக்கு அனுமதிக்கப்பட்டுள்ளது.",
+                    tag: "தமிழ் (ta-IN)",
+                    langName: "தமிழ்"
+                },
+                te: {
+                    input: "నాకు కుట్టు మిషన్‌పై పాఠశాల యూనిఫాంలు కుట్టడం, బట్టలు కత్తిరించడం మరియు గార్మెంట్స్ తయారీలో 3 సంవత్సరాల అనుభవం ఉంది.",
+                    output: "మీ కుట్టు అనుభవం ఆధారంగా, మీ అర్హత గార్మెంట్ టైలరింగ్ టెక్నీషియన్ (NSQF లెవల్ 3) మరియు ₹24,000 ప్రభుత్వ గ్రాంట్‌కు మీరు అర్హులు.",
+                    tag: "తెలుగు (te-IN)",
+                    langName: "తెలుగు"
+                }
             }
         };
 
         let currentPersonaKey = 'ravi';
+        let currentVoiceLang = 'en'; // 'en', 'hi', 'ta', 'te'
         let isRecording = false;
         let recognition = null;
 
@@ -851,12 +1016,13 @@
             recognition = new SpeechRec();
             recognition.continuous = false;
             recognition.interimResults = false;
+            recognition.lang = 'en-IN';
 
             recognition.onstart = function() {
                 isRecording = true;
                 const micBtn = document.getElementById('mic-btn');
                 micBtn.classList.add('mic-pulsing', 'bg-red-600');
-                document.getElementById('mic-status').innerText = "Listening... Speak your work experience aloud.";
+                document.getElementById('mic-status').innerText = `Listening in ${currentVoiceLang.toUpperCase()}... Speak your experience.`;
             };
 
             recognition.onresult = function(event) {
@@ -890,6 +1056,10 @@
             if (recognition) {
                 if (!isRecording) {
                     try {
+                        if (currentVoiceLang === 'hi') recognition.lang = 'hi-IN';
+                        else if (currentVoiceLang === 'ta') recognition.lang = 'ta-IN';
+                        else if (currentVoiceLang === 'te') recognition.lang = 'te-IN';
+                        else recognition.lang = 'en-IN';
                         recognition.start();
                     } catch (e) {
                         simulateVoiceRecording();
@@ -905,13 +1075,48 @@
         function simulateVoiceRecording() {
             const micBtn = document.getElementById('mic-btn');
             micBtn.classList.add('mic-pulsing', 'bg-red-600');
-            document.getElementById('mic-status').innerText = "Simulating voice input capture...";
+            document.getElementById('mic-status').innerText = `Capturing spoken audio (${currentVoiceLang.toUpperCase()})...`;
             setTimeout(() => {
-                selectDemoPrompt('solar');
+                updateVoiceTexts();
                 micBtn.classList.remove('mic-pulsing', 'bg-red-600');
                 micBtn.classList.add('bg-terracotta');
                 document.getElementById('mic-status').innerText = "Voice input captured successfully!";
-            }, 1200);
+            }, 1000);
+        }
+
+        function setVoiceLanguage(lang) {
+            currentVoiceLang = lang;
+
+            // Highlight selected button
+            document.querySelectorAll('.voice-lang-btn').forEach(btn => {
+                btn.classList.remove('bg-forest', 'text-white', 'shadow-sm');
+                btn.classList.add('text-stone-700', 'hover:bg-white');
+            });
+            const activeBtn = document.getElementById('lang-btn-' + lang);
+            if (activeBtn) {
+                activeBtn.classList.remove('text-stone-700', 'hover:bg-white');
+                activeBtn.classList.add('bg-forest', 'text-white', 'shadow-sm');
+            }
+
+            // Update speech recognition language
+            if (recognition) {
+                if (lang === 'hi') recognition.lang = 'hi-IN';
+                else if (lang === 'ta') recognition.lang = 'ta-IN';
+                else if (lang === 'te') recognition.lang = 'te-IN';
+                else recognition.lang = 'en-IN';
+            }
+
+            updateVoiceTexts();
+        }
+
+        function updateVoiceTexts() {
+            const personaData = MULTILINGUAL_DATA[currentPersonaKey] || MULTILINGUAL_DATA.ravi;
+            const currentItem = personaData[currentVoiceLang] || personaData.en;
+
+            document.getElementById('voice-transcript').value = currentItem.input;
+            document.getElementById('speech-lang-tag').innerText = currentItem.tag;
+            document.getElementById('output-lang-label').innerText = currentItem.langName;
+            document.getElementById('output-spoken-text').innerText = `"${currentItem.output}"`;
         }
 
         function switchTab(tabId) {
@@ -944,8 +1149,7 @@
             } else if (trade === 'tractor') {
                 loadPersona('suresh');
             } else if (trade === 'tailoring') {
-                document.getElementById('voice-transcript').value = "I have 3 years experience stitching school uniforms, cutting fabrics, and tailoring garments on single needle sewing machines.";
-                processVoiceInput();
+                loadPersona('tailoring');
             }
         }
 
@@ -953,7 +1157,7 @@
             currentPersonaKey = key;
             const p = PERSONAS[key] || PERSONAS.ravi;
 
-            // Highlight persona button
+            // Highlight persona button if on top bar
             document.querySelectorAll('.persona-btn').forEach(btn => {
                 btn.classList.remove('bg-forest', 'text-white', 'border-forest');
                 btn.classList.add('bg-white', 'text-stone-800', 'border-stone-300');
@@ -973,7 +1177,7 @@
             document.getElementById('dash-grant-total').innerText = `${p.grantTotal} Value`;
 
             // Update Voice Intake Inputs & Outputs
-            document.getElementById('voice-transcript').value = p.voiceText;
+            updateVoiceTexts();
             document.getElementById('result-trade-title').innerText = p.trade;
             document.getElementById('result-qp-nos').innerText = `${p.qpNos} • NSQF Level ${p.nsqfLevel}`;
             document.getElementById('result-confidence').innerText = `${p.confidence} Confidence`;
@@ -1014,10 +1218,12 @@
                 btn.innerHTML = originalText;
                 const transcript = document.getElementById('voice-transcript').value.toLowerCase();
                 
-                if (transcript.includes('weaver') || transcript.includes('silk') || transcript.includes('handloom') || transcript.includes('saree')) {
+                if (transcript.includes('weaver') || transcript.includes('silk') || transcript.includes('handloom') || transcript.includes('saree') || transcript.includes('हथकरघा') || transcript.includes('साड़ी') || transcript.includes('நெசவு') || transcript.includes('மగ్గం')) {
                     loadPersona('ananya');
-                } else if (transcript.includes('tractor') || transcript.includes('mechanic') || transcript.includes('diesel') || transcript.includes('pump')) {
+                } else if (transcript.includes('tractor') || transcript.includes('mechanic') || transcript.includes('diesel') || transcript.includes('pump') || transcript.includes('ट्रैक्टर') || transcript.includes('டிராக்டர்') || transcript.includes('ట్రాక్టర్')) {
                     loadPersona('suresh');
+                } else if (transcript.includes('stitching') || transcript.includes('tailor') || transcript.includes('garment') || transcript.includes('सिलाई') || transcript.includes('தையல்') || transcript.includes('కుట్టు')) {
+                    loadPersona('tailoring');
                 } else {
                     loadPersona('ravi');
                 }
@@ -1040,13 +1246,38 @@
         }
 
         function speakAudioResult() {
-            const p = PERSONAS[currentPersonaKey] || PERSONAS.ravi;
-            const textToSpeak = `Hello ${p.name}. Based on your work experience, your identified qualification is ${p.trade} at NSQF Level ${p.nsqfLevel}. You are pre-approved for ${p.grantTotal} under PM-AJAY Grant-in-Aid, including monthly stipend and free toolkit.`;
+            const personaData = MULTILINGUAL_DATA[currentPersonaKey] || MULTILINGUAL_DATA.ravi;
+            const currentItem = personaData[currentVoiceLang] || personaData.en;
+            const textToSpeak = currentItem.output;
             
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 const utterance = new SpeechSynthesisUtterance(textToSpeak);
-                utterance.rate = 0.95;
+                
+                let langCode = 'en-IN';
+                if (currentVoiceLang === 'hi') langCode = 'hi-IN';
+                else if (currentVoiceLang === 'ta') langCode = 'ta-IN';
+                else if (currentVoiceLang === 'te') langCode = 'te-IN';
+                utterance.lang = langCode;
+
+                // Match system voices
+                const voices = window.speechSynthesis.getVoices();
+                const matchedVoice = voices.find(v => v.lang.startsWith(currentVoiceLang) || v.lang.replace('_', '-').startsWith(langCode));
+                if (matchedVoice) {
+                    utterance.voice = matchedVoice;
+                }
+                
+                utterance.rate = 0.92;
+
+                const btn = document.getElementById('readout-btn-label');
+                if (btn) btn.innerText = "Playing Audio...";
+                utterance.onend = function() {
+                    if (btn) btn.innerText = "Audio Readout (Play)";
+                };
+                utterance.onerror = function() {
+                    if (btn) btn.innerText = "Audio Readout (Play)";
+                };
+
                 window.speechSynthesis.speak(utterance);
             } else {
                 alert(textToSpeak);
