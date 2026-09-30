@@ -12,31 +12,33 @@ from typing import List
 try:
     from .database import engine, Base, get_db
     from . import models, schemas
-    from .routers import catalog, khata, utilities
+    from .routers import counseling, district_radar, catalog, khata, utilities
 except (ImportError, ValueError):
     from database import engine, Base, get_db
     import models, schemas
-    from routers import catalog, khata, utilities
+    from routers import counseling, district_radar, catalog, khata, utilities
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title="AI-Driven Market Linkage & Smart Cataloging Platform for Artisans",
-    description="SIH 2026 Project (Problem Statement SIH26090)",
-    version="1.0.0"
+    title="Kaushal Sarathi: AI Voice Assistant for Rural Skilling & PM-AJAY Livelihood Mapping",
+    description="Ministry of Social Justice and Empowerment (MoSJE) - PM-AJAY Grant-in-Aid (GIA) Component",
+    version="2.0.0"
 )
 
-# Configure CORS so our local frontend SPA can call the API endpoints
+# Configure CORS for local frontend SPA
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins for development and ease of running locally
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 # Include Routers
+app.include_router(counseling.router)
+app.include_router(district_radar.router)
 app.include_router(catalog.router)
 app.include_router(khata.router)
 app.include_router(utilities.router)
@@ -45,144 +47,120 @@ app.include_router(utilities.router)
 def health_check():
     return {
         "status": "Healthy",
-        "project": "SIH 2026 - AI-Driven Market Linkage for Marginalized Artisans",
+        "project": "Kaushal Sarathi (कौशल सारथी)",
+        "ministry": "Ministry of Social Justice and Empowerment (MoSJE)",
+        "scheme": "PM-AJAY Grant-in-Aid (GIA) Component",
         "api_documentation": "/docs"
     }
-
-# Artisan Authentication / Profile management
-@app.post("/api/artisan/register", response_model=schemas.ArtisanResponse)
-def register_artisan(artisan: schemas.ArtisanCreate, db: Session = Depends(get_db)):
-    db_artisan = db.query(models.Artisan).filter(models.Artisan.contact_number == artisan.contact_number).first()
-    if db_artisan:
-        raise HTTPException(
-            status_code=400,
-            detail="Contact number already registered. Please login."
-        )
-    new_artisan = models.Artisan(**artisan.dict())
-    db.add(new_artisan)
-    db.commit()
-    db.refresh(new_artisan)
-    return new_artisan
-
-
-@app.post("/api/artisan/login", response_model=schemas.ArtisanResponse)
-def login_artisan(contact_number: str, db: Session = Depends(get_db)):
-    artisan = db.query(models.Artisan).filter(models.Artisan.contact_number == contact_number).first()
-    if not artisan:
-        raise HTTPException(
-            status_code=404,
-            detail="Artisan profile not found. Please register."
-        )
-    return artisan
-
-
-@app.get("/api/artisan/{artisan_id}", response_model=schemas.ArtisanResponse)
-def get_artisan_profile(artisan_id: int, db: Session = Depends(get_db)):
-    artisan = db.query(models.Artisan).filter(models.Artisan.id == artisan_id).first()
-    if not artisan:
-        raise HTTPException(status_code=404, detail="Artisan profile not found")
-    return artisan
-
-
-@app.get("/api/artisans", response_model=List[schemas.ArtisanResponse])
-def list_all_artisans(db: Session = Depends(get_db)):
-    return db.query(models.Artisan).all()
-
 
 # Seeding demo data or resetting to fresh demo state
 @app.post("/api/system/seed")
 def seed_demo_data(force: bool = False, db: Session = Depends(get_db)):
-    # If not forcing and data exists, skip
-    if not force and db.query(models.Artisan).count() > 0:
-        return {"message": "Database already has data. Use force=True to reset."}
+    """Seeds both Kaushal Sarathi and legacy data if requested"""
+    try:
+        # Check if already seeded
+        if not force and db.query(models.Beneficiary).count() > 0:
+            return {"message": "Database already seeded. Use force=True to reset."}
 
-    # Clear existing demo products, transactions, and pools if force is requested
-    if force:
-        db.query(models.KhataTransaction).delete()
-        db.query(models.Product).delete()
-        db.query(models.LogisticsPool).delete()
-        db.commit()
+        # Clear existing beneficiaries if force
+        if force:
+            db.query(models.SkillAssessment).delete()
+            db.query(models.GIAEntitlement).delete()
+            db.query(models.Beneficiary).delete()
+            db.query(models.TrainingCenter).delete()
+            db.query(models.DistrictLivelihoodDemand).delete()
+            db.commit()
 
-    # Get or create dummy artisan
-    artisan1 = db.query(models.Artisan).filter(models.Artisan.contact_number == "9876543210").first()
-    if not artisan1:
-        artisan1 = models.Artisan(
-            name="Ramesh Prasad",
-            contact_number="9876543210",
+        # Seed sample beneficiary
+        sample_ben = models.Beneficiary(
+            kaushal_id="KS-2026-RAJ-0942",
+            name="Ravi Kumar",
+            contact_number="+91-9876543210",
+            age=20,
+            gender="Male",
+            category="SC",
+            village="Bassi",
+            block="Bassi",
+            district="Jaipur Rural",
             state="Rajasthan",
-            language="Hindi",
-            pin_code="302001"
+            pincode="303301",
+            education_level="8th Standard",
+            preferred_language="hi"
         )
-        db.add(artisan1)
+        db.add(sample_ben)
         db.commit()
-        db.refresh(artisan1)
+        db.refresh(sample_ben)
 
-    # Add mock products: One already listed, others in Draft ready for "List ONDC" action
-    p1 = models.Product(
-        title="Handcrafted Jaipur Ceramic Pot",
-        description="Beautiful blue pottery ceramic pot painted by hand. Direct from Jaipur craftsmen. Eco-friendly organic paint.",
-        raw_description="मैंने जयपुर में अपने हाथों से नीली मिट्टी का मटका बनाया है, इस पर सुंदर कलाकारी की है।",
-        base_price=300.0,
-        dynamic_price=350.0,
-        category="Handcrafted Pottery & Earthenware",
-        hsn_code="69120010",
-        image_url="https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Blue_pottery_from_Jaipur_2.jpg/800px-Blue_pottery_from_Jaipur_2.jpg",
-        original_image_url="https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Potter_at_work%2C_Jaura%2C_India.jpg/800px-Potter_at_work%2C_Jaura%2C_India.jpg",
-        status="Listed_ONDC",
-        artisan_id=artisan1.id
-    )
-    p2 = models.Product(
-        title="Organic Bamboo Basket",
-        description="Premium quality storage container made of natural splits. Fully recyclable and organic storage solution.",
-        raw_description="बांस की टोकरी हाथ से बुनी गई है, घर के सामान रखने के लिए बहुत मजबूत है।",
-        base_price=200.0,
-        dynamic_price=240.0,
-        category="Bamboo & Cane Crafts",
-        hsn_code="46021100",
-        image_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Bamboo_basket%2C_Lakhimpur.jpg/800px-Bamboo_basket%2C_Lakhimpur.jpg",
-        original_image_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Bamboo_basket%2C_Lakhimpur.jpg/800px-Bamboo_basket%2C_Lakhimpur.jpg",
-        status="Draft",  # Ready for "List ONDC" demonstration
-        artisan_id=artisan1.id
-    )
-    p3 = models.Product(
-        title="Traditional Hand-Cast Brass Ganesha Idol",
-        description="A magnificent hand-cast brass Ganesha idol, crafted using the lost-wax casting technique. Features detailed traditional engravings.",
-        raw_description="पारंपरिक पीतल की गणेश जी की मूर्ति, हाथ से ढलाई और नक्काशी की गई।",
-        base_price=1100.0,
-        dynamic_price=1250.0,
-        category="Metal Art & Brassware",
-        hsn_code="83062920",
-        image_url="https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Four-armed_Ganesha_-_Brass_-_Circa_20th_Century_CE_-_Madhya_Pradesh_-_ACCN_2000-53_-_Indian_Museum_-_Kolkata_2015-09-26_3997.JPG/800px-Four-armed_Ganesha_-_Brass_-_Circa_20th_Century_CE_-_Madhya_Pradesh_-_ACCN_2000-53_-_Indian_Museum_-_Kolkata_2015-09-26_3997.JPG",
-        original_image_url="https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Four-armed_Ganesha_-_Brass_-_Circa_20th_Century_CE_-_Madhya_Pradesh_-_ACCN_2000-53_-_Indian_Museum_-_Kolkata_2015-09-26_3997.JPG/800px-Four-armed_Ganesha_-_Brass_-_Circa_20th_Century_CE_-_Madhya_Pradesh_-_ACCN_2000-53_-_Indian_Museum_-_Kolkata_2015-09-26_3997.JPG",
-        status="Draft",  # Ready for "List ONDC" demonstration
-        artisan_id=artisan1.id
-    )
-    db.add_all([p1, p2, p3])
+        # Seed skill assessment
+        sample_assessment = models.SkillAssessment(
+            beneficiary_id=sample_ben.id,
+            voice_transcript="मैंने 8वीं तक पढ़ाई की है। मेरे गांव में मैं पानी के मोटर और बिजली के तार ठीक करने में चाचा की मदद करता हूँ।",
+            detected_trade="Solar PV Water Pump & Motor Technician",
+            qp_nos_code="QP-ELE/Q5801",
+            nsqf_level=3,
+            sector="Green Energy & Electrical",
+            rpl_prior_years=2.0,
+            rpl_hours_credited=160,
+            aspiration_type="Wage Employment",
+            mobility_constraint_km=15,
+            confidence_score=0.94
+        )
+        db.add(sample_assessment)
 
-    # Add mock khata transactions
-    tx1 = models.KhataTransaction(
-        type="SALE",
-        amount=350.0,
-        details="Sold Ceramic Pot on ONDC",
-        artisan_id=artisan1.id
-    )
-    tx2 = models.KhataTransaction(
-        type="EXPENSE",
-        amount=80.0,
-        details="Bought clay raw materials",
-        artisan_id=artisan1.id
-    )
-    db.add_all([tx1, tx2])
+        # Seed GIA Entitlement
+        sample_entitlement = models.GIAEntitlement(
+            beneficiary_id=sample_ben.id,
+            scheme_name="PM-AJAY GIA Component",
+            tuition_fee_waiver=14500.0,
+            monthly_dbt_stipend=2500.0,
+            stipend_duration_months=3,
+            free_toolkit_value=10000.0,
+            toolkit_items="Digital Multimeter, Heavy Toolbag, Insulated Plier Set, Safety Helmet",
+            total_grant_value=24500.0,
+            status="Sanctioned / Pre-Approved"
+        )
+        db.add(sample_entitlement)
 
-    # Seed mock logistics pools
-    pool1 = models.LogisticsPool(
-        village_name="Jaipur Artisan Cluster",
-        pincode="302001",
-        status="Collecting",
-        total_weight=4.5,
-        orders_count=3
-    )
-    db.add(pool1)
-    
-    db.commit()
-    return {"message": "Demo data successfully initialized with ready-to-list Draft products."}
+        # Seed Training Center
+        sample_center = models.TrainingCenter(
+            center_name="Jaipur Rural PM-AJAY Skill Development Center",
+            district="Jaipur Rural",
+            state="Rajasthan",
+            pincode="303301",
+            trade_name="Solar PV Water Pump & Motor Technician",
+            qp_nos_code="QP-ELE/Q5801",
+            nsqf_level=3,
+            distance_km=7.8,
+            next_batch_date="October 15, 2026",
+            total_seats=30,
+            available_seats=12,
+            contact_phone="+91-1800-180-2026"
+        )
+        db.add(sample_center)
+
+        # Seed District Demand
+        sample_demand = models.DistrictLivelihoodDemand(
+            district="Jaipur Rural",
+            block_name="Bassi",
+            state="Rajasthan",
+            trade_name="Solar PV Water Pump & Motor Technician",
+            nsqf_level=3,
+            current_vacancies=54,
+            unskilled_labor_pool=340,
+            local_infrastructure_link="45 Solar Water Pumps under PM-KUSUM; 0 certified technicians nearby.",
+            hiring_index_pct=94,
+            priority_level="Critical Deficit"
+        )
+        db.add(sample_demand)
+        db.commit()
+
+        return {
+            "status": "Success",
+            "message": "Kaushal Sarathi demo data seeded successfully!",
+            "demo_candidate": "Ravi Kumar (KS-2026-RAJ-0942)",
+            "trade": "Solar PV Water Pump & Motor Technician (NSQF Level 3)",
+            "grant_value": "₹24,500"
+        }
+    except Exception as e:
+        db.rollback()
+        return {"status": "Error", "message": str(e)}
