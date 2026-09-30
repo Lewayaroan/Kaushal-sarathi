@@ -98,7 +98,7 @@
                 <i class="fa-solid fa-hand-holding-dollar text-base w-5"></i> GIA Calculator
             </button>
             <button onclick="switchTab('radar')" id="btn-radar" class="tab-btn flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium transition w-full text-left">
-                <i class="fa-solid fa-radar text-base w-5"></i> Demand Radar
+                <i class="fa-solid fa-satellite-dish text-base w-5"></i> Demand Radar
             </button>
             <button onclick="switchTab('card')" id="btn-card" class="tab-btn flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium transition w-full text-left">
                 <i class="fa-solid fa-id-card text-base w-5"></i> Kaushal Card
@@ -233,8 +233,8 @@
                     </div>
 
                     <div onclick="switchTab('radar')" class="p-4 rounded-2xl border border-stone-200 hover:border-forest hover:shadow-sm transition cursor-pointer bg-white group">
-                        <div class="h-10 w-10 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center text-lg mb-2 group-hover:scale-105 transition">
-                            <i class="fa-solid fa-compass-drafting"></i>
+                        <div class="h-10 w-10 rounded-xl bg-forest/10 text-forest flex items-center justify-center text-lg mb-2 group-hover:scale-105 transition">
+                            <i class="fa-solid fa-satellite-dish"></i>
                         </div>
                         <h4 class="font-bold text-stone-800 text-sm">Demand Radar</h4>
                         <p class="text-xs text-stone-500 mt-1">Match candidates to verified district vacancies within 15 km.</p>
@@ -481,11 +481,14 @@
             <!-- TAB 5: DEMAND RADAR -->
             <div id="tab-radar" class="tab-content hidden flex flex-col gap-6">
                 <div class="border-b border-stone-200 pb-3 flex flex-wrap justify-between items-center gap-3">
-                    <div>
-                        <h2 class="text-lg font-bold text-stone-800 flex items-center gap-2">
-                            <i class="fa-solid fa-radar text-forest"></i> Local Livelihood Demand Radar
-                        </h2>
-                        <p class="text-stone-500 text-xs mt-0.5">Real-time district demand and nearby accredited skilling centers within 15 km.</p>
+                    <div class="flex items-center gap-3">
+                        <div class="h-10 w-10 rounded-2xl bg-forest/10 text-forest flex items-center justify-center text-lg shrink-0">
+                            <i class="fa-solid fa-satellite-dish"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-lg font-bold text-stone-800 leading-tight">Local Livelihood Demand Radar</h2>
+                            <p class="text-stone-500 text-xs mt-0.5">Real-time district demand and nearby accredited skilling centers within 15 km.</p>
+                        </div>
                     </div>
                     <div class="flex items-center gap-2">
                         <span class="text-xs text-stone-500 font-medium">Select District:</span>
@@ -498,34 +501,82 @@
                     </div>
                 </div>
 
+                <!-- Live Radar Scanner Visualizer -->
+                <div class="p-4 rounded-2xl border border-stone-200 bg-stone-900 text-white flex flex-wrap items-center justify-between gap-4">
+                    <div class="flex items-center gap-3.5">
+                        <div class="relative flex items-center justify-center h-12 w-12 rounded-full bg-emerald-500/20 border border-emerald-400/40 shrink-0">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400/30 opacity-75"></span>
+                            <i class="fa-solid fa-satellite-dish text-emerald-400 text-lg relative"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h4 class="text-sm font-bold tracking-wide">15 KM HYPER-LOCAL RADAR SCAN</h4>
+                                <span class="text-[9px] bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 px-2 py-0.5 rounded font-bold uppercase tracking-wider">Active</span>
+                            </div>
+                            <p class="text-xs text-stone-400 mt-0.5">Auto-scanning village cluster infrastructure for certified technician deficits.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 text-xs">
+                        <div class="text-right">
+                            <span class="text-stone-400 block text-[10px]">Radius</span>
+                            <strong class="text-white">15 km Coverage</strong>
+                        </div>
+                        <div class="h-7 w-px bg-stone-700"></div>
+                        <div class="text-right">
+                            <span class="text-stone-400 block text-[10px]">Panchayats</span>
+                            <strong class="text-emerald-400">100% Mapped</strong>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Radar Metrics -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div class="bg-stone-50 border border-stone-200 p-4 rounded-2xl">
-                        <span class="text-stone-400 text-xs font-semibold uppercase tracking-wider">Hiring Index</span>
-                        <h3 id="radar-hiring-index" class="text-2xl font-extrabold text-emerald-700 mt-0.5">94%</h3>
-                        <span class="text-[11px] text-stone-500 font-medium">High absorption priority</span>
+                    <div class="bg-stone-50 border border-stone-200 p-4 rounded-2xl flex items-center justify-between">
+                        <div>
+                            <span class="text-stone-400 text-xs font-semibold uppercase tracking-wider">Hiring Index</span>
+                            <h3 id="radar-hiring-index" class="text-2xl font-extrabold text-emerald-700 mt-0.5">94%</h3>
+                            <span class="text-[11px] text-stone-500 font-medium">High absorption priority</span>
+                        </div>
+                        <div class="h-11 w-11 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
                     </div>
 
-                    <div class="bg-stone-50 border border-stone-200 p-4 rounded-2xl">
-                        <span class="text-stone-400 text-xs font-semibold uppercase tracking-wider">Active Vacancies</span>
-                        <h3 id="radar-vacancies" class="text-2xl font-extrabold text-stone-800 mt-0.5">54 Openings</h3>
-                        <span class="text-[11px] text-stone-500 font-medium">Within 15 km radius</span>
+                    <div class="bg-stone-50 border border-stone-200 p-4 rounded-2xl flex items-center justify-between">
+                        <div>
+                            <span class="text-stone-400 text-xs font-semibold uppercase tracking-wider">Active Vacancies</span>
+                            <h3 id="radar-vacancies" class="text-2xl font-extrabold text-stone-800 mt-0.5">54 Openings</h3>
+                            <span class="text-[11px] text-stone-500 font-medium">Within 15 km radius</span>
+                        </div>
+                        <div class="h-11 w-11 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-briefcase"></i>
+                        </div>
                     </div>
 
-                    <div class="bg-stone-50 border border-stone-200 p-4 rounded-2xl">
-                        <span class="text-stone-400 text-xs font-semibold uppercase tracking-wider">Key Demand Driver</span>
-                        <h4 id="radar-driver" class="text-sm font-bold text-stone-800 mt-1">45 Solar Tubewells (PM-KUSUM)</h4>
-                        <span class="text-[11px] text-stone-500 font-medium">Immediate maintenance deficit</span>
+                    <div class="bg-stone-50 border border-stone-200 p-4 rounded-2xl flex items-center justify-between">
+                        <div>
+                            <span class="text-stone-400 text-xs font-semibold uppercase tracking-wider">Key Demand Driver</span>
+                            <h4 id="radar-driver" class="text-sm font-bold text-stone-800 mt-0.5">45 Solar Tubewells (PM-KUSUM)</h4>
+                            <span class="text-[11px] text-stone-500 font-medium">Immediate maintenance deficit</span>
+                        </div>
+                        <div class="h-11 w-11 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-bolt"></i>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Accredited Center Match Card -->
                 <div class="bg-stone-50 border border-stone-200 p-5 rounded-2xl">
                     <div class="flex justify-between items-start mb-3">
-                        <div>
-                            <span class="text-[10px] font-bold text-forest bg-forest/10 px-2.5 py-0.5 rounded uppercase tracking-wider">Accredited Center Match</span>
-                            <h3 id="radar-center-name" class="text-base font-bold text-stone-900 mt-1">Jaipur Rural PM-AJAY Skilling Center</h3>
-                            <p id="radar-center-loc" class="text-xs text-stone-500">Bassi Block, Jaipur Rural • 7.8 km from candidate village</p>
+                        <div class="flex items-center gap-3">
+                            <div class="h-10 w-10 rounded-xl bg-forest/10 text-forest flex items-center justify-center text-base shrink-0">
+                                <i class="fa-solid fa-building-columns"></i>
+                            </div>
+                            <div>
+                                <span class="text-[10px] font-bold text-forest bg-forest/10 px-2.5 py-0.5 rounded uppercase tracking-wider">Accredited Center Match</span>
+                                <h3 id="radar-center-name" class="text-base font-bold text-stone-900 mt-0.5">Jaipur Rural PM-AJAY Skilling Center</h3>
+                                <p id="radar-center-loc" class="text-xs text-stone-500">Bassi Block, Jaipur Rural • 7.8 km from candidate village</p>
+                            </div>
                         </div>
                         <span class="bg-emerald-50 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-lg border border-emerald-200">
                             12 / 30 Seats Remaining
@@ -696,7 +747,7 @@
             <i class="fa-solid fa-hand-holding-dollar text-base"></i> Grants
         </button>
         <button onclick="switchTab('radar')" class="text-stone-600 hover:text-forest flex flex-col items-center gap-0.5 text-[10px] font-medium">
-            <i class="fa-solid fa-radar text-base"></i> Radar
+            <i class="fa-solid fa-satellite-dish text-base"></i> Radar
         </button>
         <button onclick="switchTab('card')" class="text-stone-600 hover:text-forest flex flex-col items-center gap-0.5 text-[10px] font-medium">
             <i class="fa-solid fa-id-card text-base"></i> Card
