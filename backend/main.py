@@ -44,7 +44,7 @@ app.include_router(district_radar.router)
 def health_check():
     return {
         "status": "Healthy",
-        "project": "Kaushal Sarathi (कौशल सारथी)",
+        "project": "Kaushal Sarathi",
         "ministry": "Ministry of Social Justice and Empowerment (MoSJE)",
         "scheme": "PM-AJAY Grant-in-Aid (GIA) Component",
         "api_documentation": "/docs"

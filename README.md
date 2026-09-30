@@ -1,4 +1,4 @@
-# Kaushal Sarathi (कौशल सारथी) 🇮🇳
+# Kaushal Sarathi 🇮🇳
 
 ### **AI-Driven Voice Assistant for Livelihood Mapping & NSQF-Aligned Skilling Recommendations under PM-AJAY (GIA Component)**
 * **Ministry:** Ministry of Social Justice and Empowerment (MoSJE)  
@@ -10,7 +10,7 @@
 
 ## 📖 Project Overview
 
-**Kaushal Sarathi (कौशल सारथी)** is a voice-first, vernacular AI livelihood navigator built to overcome the low-literacy and language barriers faced by underprivileged Scheduled Caste (SC) rural youth. 
+**Kaushal Sarathi** is a voice-first, vernacular AI livelihood navigator built to overcome the low-literacy and language barriers faced by underprivileged Scheduled Caste (SC) rural youth. 
 
 Instead of forcing beneficiaries to navigate complex, text-heavy online portals, Kaushal Sarathi conducts **natural spoken conversations in local dialects** (Hindi, Tamil, Bhojpuri, etc.), maps informal craft and trade experience into official **NSQF (National Skills Qualification Framework)** qualification levels (Levels 1–5), calculates exact free legal entitlements under the **PM-AJAY Grant-in-Aid (GIA)** component (100% free course, ₹2,500/month stipend, ₹10,000 free toolkit), and matches beneficiaries to certified local jobs within a **15 km radius**.
 
