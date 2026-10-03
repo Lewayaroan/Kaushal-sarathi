@@ -72,12 +72,170 @@
                 <i class="fa-solid fa-user-circle"></i>
                 <span id="badge-candidate-name">Ravi Kumar (Jaipur Rural)</span>
             </div>
-            <button onclick="resetToDemo('ravi')" title="Reset Demo Profile" class="text-white hover:text-emerald-200 text-xs px-2.5 py-1.5 rounded-lg border border-white/20 transition flex items-center gap-1.5">
+            <button onclick="openLoginModal()" title="Switch Account / Login" class="bg-white/10 hover:bg-white/20 text-white text-xs px-2.5 py-1.5 rounded-lg border border-white/25 transition flex items-center gap-1.5 shadow-xs">
+                <i class="fa-solid fa-right-to-bracket text-emerald-300"></i>
+                <span class="font-medium">Login / Switch</span>
+            </button>
+            <button onclick="resetToDemo('ravi')" title="Reset to Ravi Kumar" class="text-white/80 hover:text-emerald-200 text-xs px-2 py-1.5 rounded-lg border border-white/15 transition flex items-center gap-1">
                 <i class="fa-solid fa-arrows-rotate"></i>
-                <span class="hidden sm:inline">Reset Profile</span>
+                <span class="hidden sm:inline">Reset</span>
             </button>
         </div>
     </header>
+
+    <!-- JUDGE & BENEFICIARY LOGIN MODAL OVERLAY -->
+    <div id="login-modal-overlay" class="fixed inset-0 bg-stone-900/80 backdrop-blur-sm z-[9999] flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl shadow-2xl border border-stone-200 max-w-2xl w-full p-6 sm:p-7 relative my-auto animate-fade-in">
+            <!-- Modal Header -->
+            <div class="flex items-start justify-between pb-4 border-b border-stone-100">
+                <div class="flex items-center gap-3">
+                    <div class="h-11 w-11 rounded-2xl bg-forest text-white flex items-center justify-center text-xl shadow-md">
+                        <i class="fa-solid fa-id-card-clip"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h2 class="text-xl font-bold text-stone-900">Kaushal Sarathi Login</h2>
+                            <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">SIH 2026 Evaluation</span>
+                        </div>
+                        <p class="text-xs text-stone-500 mt-0.5">PM-AJAY GIA Livelihood Mapping & NSQF AI Skilling Portal</p>
+                    </div>
+                </div>
+                <button onclick="closeLoginModal()" title="Close" class="text-stone-400 hover:text-stone-700 h-8 w-8 rounded-full hover:bg-stone-100 flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Two Login Choices Banner -->
+            <div class="bg-emerald-50/70 border border-emerald-200 rounded-2xl p-3.5 my-4 flex items-center gap-3">
+                <i class="fa-solid fa-circle-info text-forest text-lg shrink-0"></i>
+                <p class="text-xs text-stone-700 leading-relaxed">
+                    <strong>For Evaluators & Judges:</strong> You can either <strong>click any pre-seeded persona</strong> below for an instant walkthrough, or <strong>enter your own custom test profile</strong> to test our AI engine!
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-2">
+                <!-- Option A: Fast 1-Click Pre-Seeded Personas -->
+                <div class="space-y-3 flex flex-col justify-between">
+                    <div>
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-stone-400 flex items-center gap-1.5">
+                            <i class="fa-solid fa-bolt text-amber-500"></i> Option A: Fast Seeded Logins
+                        </span>
+                        <p class="text-xs text-stone-500 mt-0.5 mb-2.5">Click any seeded candidate to load live demo data:</p>
+                    </div>
+
+                    <div class="space-y-2">
+                        <!-- Seed 1: Ravi -->
+                        <button onclick="loginWithSeeded('ravi')" class="w-full text-left p-3 rounded-2xl border border-stone-200 hover:border-forest hover:bg-emerald-50/50 transition flex items-center justify-between group shadow-2xs">
+                            <div class="flex items-center gap-3">
+                                <div class="h-9 w-9 rounded-xl bg-forest/10 text-forest font-bold flex items-center justify-center text-sm group-hover:bg-forest group-hover:text-white transition">
+                                    <i class="fa-solid fa-bolt"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs font-bold text-stone-900">Ravi Kumar (Jaipur Rural)</div>
+                                    <div class="text-[11px] text-stone-500">Solar & Water Pump • 8th Std • ₹24,500 GIA</div>
+                                </div>
+                            </div>
+                            <span class="text-xs text-forest font-bold group-hover:translate-x-0.5 transition"><i class="fa-solid fa-arrow-right"></i></span>
+                        </button>
+
+                        <!-- Seed 2: Ananya -->
+                        <button onclick="loginWithSeeded('ananya')" class="w-full text-left p-3 rounded-2xl border border-stone-200 hover:border-forest hover:bg-emerald-50/50 transition flex items-center justify-between group shadow-2xs">
+                            <div class="flex items-center gap-3">
+                                <div class="h-9 w-9 rounded-xl bg-terracotta/10 text-terracotta font-bold flex items-center justify-center text-sm group-hover:bg-terracotta group-hover:text-white transition">
+                                    <i class="fa-solid fa-shirt"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs font-bold text-stone-900">Ananya Devi (Salem, TN)</div>
+                                    <div class="text-[11px] text-stone-500">Jacquard Handloom • 10th Std • ₹26,000 GIA</div>
+                                </div>
+                            </div>
+                            <span class="text-xs text-forest font-bold group-hover:translate-x-0.5 transition"><i class="fa-solid fa-arrow-right"></i></span>
+                        </button>
+
+                        <!-- Seed 3: Suresh -->
+                        <button onclick="loginWithSeeded('suresh')" class="w-full text-left p-3 rounded-2xl border border-stone-200 hover:border-forest hover:bg-emerald-50/50 transition flex items-center justify-between group shadow-2xs">
+                            <div class="flex items-center gap-3">
+                                <div class="h-9 w-9 rounded-xl bg-amber-500/10 text-amber-700 font-bold flex items-center justify-center text-sm group-hover:bg-amber-600 group-hover:text-white transition">
+                                    <i class="fa-solid fa-tractor"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs font-bold text-stone-900">Suresh Verma (Varanasi, UP)</div>
+                                    <div class="text-[11px] text-stone-500">Tractor & Agri Mechanic • 8th Std • ₹25,000 GIA</div>
+                                </div>
+                            </div>
+                            <span class="text-xs text-forest font-bold group-hover:translate-x-0.5 transition"><i class="fa-solid fa-arrow-right"></i></span>
+                        </button>
+
+                        <!-- Seed 4: Pooja -->
+                        <button onclick="loginWithSeeded('tailoring')" class="w-full text-left p-3 rounded-2xl border border-stone-200 hover:border-forest hover:bg-emerald-50/50 transition flex items-center justify-between group shadow-2xs">
+                            <div class="flex items-center gap-3">
+                                <div class="h-9 w-9 rounded-xl bg-purple-500/10 text-purple-700 font-bold flex items-center justify-center text-sm group-hover:bg-purple-600 group-hover:text-white transition">
+                                    <i class="fa-solid fa-scissors"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs font-bold text-stone-900">Pooja Meghwal (Chaksu, RAJ)</div>
+                                    <div class="text-[11px] text-stone-500">Apparel & Garment • 10th Std • ₹24,000 GIA</div>
+                                </div>
+                            </div>
+                            <span class="text-xs text-forest font-bold group-hover:translate-x-0.5 transition"><i class="fa-solid fa-arrow-right"></i></span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Option B: Custom Candidate / Judge Test Profile -->
+                <div class="space-y-3 bg-stone-50/70 p-4 rounded-2xl border border-stone-200 flex flex-col justify-between">
+                    <div>
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-stone-400 flex items-center gap-1.5">
+                            <i class="fa-solid fa-keyboard text-emerald-600"></i> Option B: Enter Custom Profile
+                        </span>
+                        <p class="text-xs text-stone-500 mt-0.5 mb-2.5">Input your own test data as candidate or judge:</p>
+
+                        <div class="space-y-2.5">
+                            <div>
+                                <label class="text-[11px] font-semibold text-stone-700 block mb-0.5">Candidate / Judge Name</label>
+                                <input type="text" id="custom-login-name" placeholder="e.g. Dr. Rajesh Sharma (Judge)" class="w-full bg-white border border-stone-300 rounded-xl px-3 py-1.5 text-xs text-stone-800 focus:outline-none focus:border-forest focus:ring-1 focus:ring-forest transition" />
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="text-[11px] font-semibold text-stone-700 block mb-0.5">District & State</label>
+                                    <input type="text" id="custom-login-loc" placeholder="e.g. Alwar, Rajasthan" class="w-full bg-white border border-stone-300 rounded-xl px-3 py-1.5 text-xs text-stone-800 focus:outline-none focus:border-forest transition" />
+                                </div>
+                                <div>
+                                    <label class="text-[11px] font-semibold text-stone-700 block mb-0.5">Education / Category</label>
+                                    <select id="custom-login-edu" class="w-full bg-white border border-stone-300 rounded-xl px-2.5 py-1.5 text-xs text-stone-800 focus:outline-none focus:border-forest transition">
+                                        <option value="8th Standard">8th Standard (SC)</option>
+                                        <option value="10th Standard">10th Standard (SC)</option>
+                                        <option value="12th Standard">12th Standard (SC)</option>
+                                        <option value="Diploma / ITI">Diploma / ITI</option>
+                                        <option value="SIH Evaluator">SIH Evaluator / Jury</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="text-[11px] font-semibold text-stone-700 block mb-0.5">Primary Trade / Practical Experience</label>
+                                <select id="custom-login-trade" class="w-full bg-white border border-stone-300 rounded-xl px-2.5 py-1.5 text-xs text-stone-800 focus:outline-none focus:border-forest transition">
+                                    <option value="solar">Solar PV & Tube Well Pumps (Renewable Energy)</option>
+                                    <option value="handloom">Jacquard Handloom & Fabric Weaving (Textiles)</option>
+                                    <option value="tractor">Agri Machinery & Tractor Servicing (Mechanization)</option>
+                                    <option value="tailoring">Garment Construction & Tailoring (Apparel)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="loginWithCustom()" class="w-full mt-3 bg-forest hover-bg-forest text-white py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-sm">
+                        <i class="fa-solid fa-check"></i> Continue with Custom Profile
+                    </button>
+                </div>
+            </div>
+
+            <!-- Footer Note -->
+            <div class="mt-4 pt-3 border-t border-stone-100 flex items-center justify-between text-[11px] text-stone-400">
+                <span>Autonomous Engine • Real-time PM-AJAY GIA Mapping</span>
+                <span class="text-forest font-semibold cursor-pointer hover:underline" onclick="loginWithSeeded('ravi')">Skip & Launch Default (Ravi Kumar) &rarr;</span>
+            </div>
+        </div>
+    </div>
 
     <!-- Main Container Layout -->
     <div class="flex-grow flex flex-col md:flex-row max-w-7xl w-full mx-auto p-4 md:p-6 gap-6">
@@ -1317,9 +1475,49 @@
             switchTab('dashboard');
         }
 
-        // Initialize on page load
+        // Login Modal Controls
+        function openLoginModal() {
+            const overlay = document.getElementById('login-modal-overlay');
+            if (overlay) overlay.classList.remove('hidden');
+        }
+
+        function closeLoginModal() {
+            const overlay = document.getElementById('login-modal-overlay');
+            if (overlay) overlay.classList.add('hidden');
+        }
+
+        function loginWithSeeded(key) {
+            loadPersona(key);
+            switchTab('dashboard');
+            closeLoginModal();
+        }
+
+        function loginWithCustom() {
+            const name = document.getElementById('custom-login-name').value.trim() || "Evaluator / Test Candidate";
+            const loc = document.getElementById('custom-login-loc').value.trim() || "District Center, India";
+            const edu = document.getElementById('custom-login-edu').value;
+            const tradeType = document.getElementById('custom-login-trade').value;
+
+            // Base on selected trade template
+            loadPersona(tradeType);
+
+            // Override with custom entered data
+            document.getElementById('badge-candidate-name').innerText = `${name} (${loc.split(',')[0]})`;
+            document.getElementById('dash-candidate-name').innerText = name;
+            document.getElementById('dash-candidate-loc').innerText = `${loc} • ${edu}`;
+
+            // Update Kaushal Card
+            document.getElementById('card-candidate-name').innerText = name;
+            document.getElementById('card-location').innerText = `${loc} • ${edu}`;
+
+            switchTab('dashboard');
+            closeLoginModal();
+        }
+
+        // Initialize on page load - Always open login modal first
         window.addEventListener('DOMContentLoaded', () => {
             loadPersona('ravi');
+            openLoginModal();
         });
     </script>
 </body>
